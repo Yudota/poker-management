@@ -1,0 +1,33 @@
+{
+  "name": "poker-management",
+  "version": "1.0.0",
+  "description": "CRUD responsável pelo gerenciamento de jogadores de poker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yudota/poker-management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yudota/poker-management/issues"
+  },
+  "homepage": "https://github.com/Yudota/poker-management#readme",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --transpile-only src/server.ts",
+    "typeorm": "ts-node-dev node_modules/.bin/typeorm"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.8.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.10"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.3"
+  }
+}
