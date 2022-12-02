@@ -8,7 +8,7 @@ type EnderecoConstructor = {
   numero: string;
   bairro: string;
   cep: string;
-  compĺemento: string;
+  complemento: string;
   cidade: Cidade;
   estado: Estado;
   id?: string;
@@ -19,7 +19,7 @@ export default class Endereco extends AbsEntidadeDominio {
   private _numero: string;
   private _bairro: string;
   private _cep: string;
-  private _compĺemento: string;
+  private _complemento: string;
   private _cidade: Cidade;
   private _estado: Estado;
 
@@ -30,7 +30,7 @@ export default class Endereco extends AbsEntidadeDominio {
       numero,
       bairro,
       cep,
-      compĺemento = 'n/a',
+      complemento: compĺemento = 'n/a',
       cidade,
       estado,
       id
@@ -41,7 +41,7 @@ export default class Endereco extends AbsEntidadeDominio {
     this._numero = numero
     this._bairro = bairro
     this._cep = cep
-    this._compĺemento = compĺemento
+    this._complemento = compĺemento
     this._cidade = cidade
     this._estado = estado
   }
@@ -76,10 +76,10 @@ export default class Endereco extends AbsEntidadeDominio {
     this._cep = val
   }
   get compĺemento(): string {
-    return this._compĺemento
+    return this._complemento
   }
   set compĺemento(val: string) {
-    this._compĺemento = val
+    this._complemento = val
   }
   get cidade(): Cidade {
     return this._cidade
