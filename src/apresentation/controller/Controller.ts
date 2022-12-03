@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { ICommand } from "../../commands/ICommand";
 import { IViewHelper } from "../vh/IViewHelper";
 
@@ -9,12 +10,10 @@ export class Controller {
   constructor() {
     this._url = "";
     this._operacao = "";
-
   }
   async doGet(req: Request, resp: Response) {
     this._url = req.url;
     this._operacao = req.method;
     console.log(req.method);
-    
   }
 }
