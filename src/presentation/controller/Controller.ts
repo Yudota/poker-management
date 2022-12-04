@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ICommand } from "../../commands/ICommand";
 import { IViewHelper } from "../vh/IViewHelper";
 import { MethodRequestTypes } from "./RequesType";
-import { ViewHelperPlayer } from "../vh/ViewHelperPlayer";
+import { ViewHelperPlayer } from "../View/ViewHelperPlayer";
 import { ListAllCommand } from "../../commands/ListAllCommand";
 
 export class Controller {
