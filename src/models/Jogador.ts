@@ -3,7 +3,7 @@ import Carteira from "./Carteira";
 import Endereco from "./Endereco";
 import Telefone from "./Telefone";
 
-type JogadorConstructor = {
+export type JogadorConstructor = {
   id?: string;
   nome: string;
   dataNascimento: string;

@@ -6,18 +6,18 @@ type CarteiraConstructor = {
   id?: string;
 }
 export default class Carteira extends AbsEntidadeDominio {
-  private saldo: number;
+  private _saldo: number;
 
   constructor({ saldo, id }: CarteiraConstructor) {
     super(id)
-    this.saldo = saldo;
+    this._saldo = saldo;
   }
 
   public getSaldo(): number {
-    return this.saldo;
+    return this._saldo;
   }
   public setSaldo(saldo: number): void {
-    this.saldo = saldo;
+    this._saldo = saldo;
   }
   public getId(): string | undefined {
     return super.id;
