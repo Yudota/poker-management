@@ -1,22 +1,20 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
-
-type CidadeConstructor = {
-  descricao: string;
-  id?: string;
-}
+import Estado from './Estado';
 export default class Cidade extends AbsEntidadeDominio {
-  private _descricao: string;
+  private _nomeCidade: string;
+  private _est:Estado;
 
-  constructor({ descricao, id }: CidadeConstructor) {
-    super(id)
-    this._descricao = descricao;
+  constructor(id:string, nomeCidade:string,  estado:Estado) {
+    super(id);
+    this._nomeCidade = nomeCidade;
+    this._est = estado
   }
 
-  get descricao(): string {
-    return this._descricao;
+  get nomeCidade(): string {
+    return this._nomeCidade;
   }
-  set descricao(descricao: string) {
-    this._descricao = descricao;
+  set nomeCidade(nomeCidade: string) {
+    this._nomeCidade = nomeCidade;
   }
   get id(): string | undefined {
     return super.id;

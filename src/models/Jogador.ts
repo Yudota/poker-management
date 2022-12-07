@@ -2,19 +2,6 @@ import AbsEntidadeDominio from "./AbsEntidadeDominio";
 import Carteira from "./Carteira";
 import Endereco from "./Endereco";
 import Telefone from "./Telefone";
-
-export type JogadorConstructor = {
-  id?: string;
-  nome: string;
-  dataNascimento: string;
-  apelido: string;
-  email: string;
-  cpf: string;
-  senha: string;
-  telefone: Telefone;
-  carteira: Carteira;
-  endereco: Endereco;
-}
 export default class Jogador extends AbsEntidadeDominio {
 
   private _nome: string;
@@ -27,18 +14,19 @@ export default class Jogador extends AbsEntidadeDominio {
   private _carteira: Carteira;
   private _endereco: Endereco;
 
-  constructor({
-    nome,
-    dataNascimento,
-    apelido,
-    email,
-    cpf,
-    senha,
-    telefone,
-    carteira,
-    endereco,
-    id
-  }: JogadorConstructor) {
+  constructor(
+    id:string,
+    nome:string,
+    dataNascimento:string,
+    apelido:string,
+    email:string,
+    cpf:string,
+    senha:string,
+    telefone:Telefone,
+    carteira:Carteira,
+    endereco:Endereco
+    )
+   {
     super(id)
     this._nome = nome;
     this._dataNascimento = dataNascimento;

@@ -1,22 +1,17 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
 
-
-type CarteiraConstructor = {
-  saldo: number;
-  id?: string;
-}
 export default class Carteira extends AbsEntidadeDominio {
-  private _saldo: number;
+  private _saldo: string;
 
-  constructor({ saldo, id }: CarteiraConstructor) {
+  constructor( saldo:string, id:string ) {
     super(id)
     this._saldo = saldo;
   }
 
-  public getSaldo(): number {
+  public getSaldo(): string {
     return this._saldo;
   }
-  public setSaldo(saldo: number): void {
+  public setSaldo(saldo: string): void {
     this._saldo = saldo;
   }
   public getId(): string | undefined {

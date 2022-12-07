@@ -1,15 +1,10 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
 
-type TelefoneConstructor = {
-  ddd: string;
-  numero: string;
-  id?: string;
-}
 export default class Telefone extends AbsEntidadeDominio {
   private _ddd: string;
   private _numero: string;
 
-  constructor({ ddd, numero, id }: TelefoneConstructor) {
+  constructor( id:string, ddd:string, numero:string) {
     super(id)
     this._ddd = ddd;
     this._numero = numero;
