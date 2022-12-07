@@ -1,9 +1,9 @@
 import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
+import Result from "../utils/Result";
 
 export default interface IDAO {
-    getAll: () => Array<AbsEntidadeDominio>;
-    getByID: (id: number) => AbsEntidadeDominio;
-    save: (entity: AbsEntidadeDominio) => Promise<void>;
-    update: (entity: AbsEntidadeDominio) => Promise<AbsEntidadeDominio>;
-    remove: (entity: AbsEntidadeDominio) => Promise<void>;
+    criar(entidade: AbsEntidadeDominio): Promise<Result>;
+    alterar(entidade: AbsEntidadeDominio): Promise<Result>;
+    excluir(id: number): Promise<Result>;
+    consultar(entidade: AbsEntidadeDominio): Promise<Result>;
 }
