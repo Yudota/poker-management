@@ -43,10 +43,10 @@ export default class Endereco extends AbsEntidadeDominio {
   set logradouro(val: string) {
     this._logradouro = val
   }
-  get numero(): string {
+  get numeroEndereco(): string {
     return this._numeroEndereco
   }
-  set numero(val: string) {
+  set numeroEndereco(val: string) {
     this._numeroEndereco = val
   }
   get bairro(): string {
