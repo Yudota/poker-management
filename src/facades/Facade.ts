@@ -1,107 +1,141 @@
 
+import { TYPE_COMMAND } from "../commands/types/typeCommand";
 import IDAO from "../DAO/IDAO";
 import JogadorDAO from "../DAO/JogadorDAO";
 import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
 import IStrategy from "../strategy/IStrategy";
+import Result from "../utils/Result";
 import IFacade from "./IFacade";
+import { TYPE_MODEL } from "./types/typeModel";
 
-// interface Mapper {
-//     [x:]
-// }
-
-// const mapper = {
-//     'Create': {
-//         'JOGADOR': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//             strategy5,
-//         ],
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'Read': {
-//         'JOGADOR': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//             strategy5,
-//         ],
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'Update': {
-//         'JOGADOR': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//             strategy5,
-//         ],
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'Delete': {
-//         'JOGADOR': logicDeleteJogador,
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'BANANA': {
-//         'NANICA': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//         ],
-//         'PRATA': [
-//             ...
-//         ],
-//     }
-// }
+type MapperStrategies = { [KEY in TYPE_COMMAND]: Array<IStrategy> }
+type MapperModelStrategy = {
+  [KEY in TYPE_MODEL]: MapperStrategies;
+};
+type MapperModelDAO = {
+  [KEY in TYPE_MODEL]: IDAO;
+}
 export default class Facade implements IFacade {
-  private daos: Map<String, IDAO>
-  private regras: Map<String, Map<String, Array<IStrategy>>>
+  private daos: MapperModelDAO
+  private regras: MapperModelStrategy
   constructor() {
-    this.regras = new Map();
+    this.regras = {
+      [TYPE_MODEL.JOGADOR]: {
+        [TYPE_COMMAND.CREATE]: [],
+        [TYPE_COMMAND.READ]: [],
+        [TYPE_COMMAND.UPDATE]: [],
+        [TYPE_COMMAND.DELETE]: [],
+      }
+    }
 
-    this.daos = new Map()
 
-    this.daos.set('Jogador', new JogadorDAO())
+    this.daos = {
+      [TYPE_MODEL.JOGADOR]: new JogadorDAO()
+    }
 
   }
-  criar(entidade: AbsEntidadeDominio) {
-    console.log(entidade, "SALVAR");
-    this.daos.get('JogadorDAO')?.save(entidade)
+  async criar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, TYPE_COMMAND.CREATE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
 
-    return "";
+    try {
+      regras.forEach(estrategia => {
+        const { mensagem, erro, data } = estrategia.processar(entidade);
+        result.mensagem += mensagem + '/n';
+        result.erro += erro;
+        result.data.push(...data);
+      })
+      if (!result.erro) {
+        result = await dao.criar(entidade)
+      }
+      return result
+    } catch (error) {
+
+    }
+    finally {
+      return result
+    }
+
   }
-  consultar(entidade: Partial<AbsEntidadeDominio>) {
-    console.log(entidade, "Listar");
+  async consultar(entidade: Partial<AbsEntidadeDominio>) {
+    console.log(entidade, TYPE_COMMAND.CREATE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
 
-    return "";
+    try {
+      regras.forEach(estrategia => {
+        const { mensagem, erro, data } = estrategia.processar(entidade as AbsEntidadeDominio);
+        result.mensagem += mensagem + '/n';
+        result.erro += erro;
+        result.data.push(...data);
+      })
+      if (!result.erro) {
+        result = await dao.consultar(entidade as AbsEntidadeDominio)
+      }
+      return result
+    } catch (error) {
+
+    }
+    finally {
+      return result
+    }
+
   }
-  deletar(entidade: AbsEntidadeDominio) {
-    console.log(entidade, "Delete");
+  async deletar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, TYPE_COMMAND.CREATE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
 
-    return "";
+    try {
+      regras.forEach(estrategia => {
+        const { mensagem, erro, data } = estrategia.processar(entidade);
+        result.mensagem += mensagem + '/n';
+        result.erro += erro;
+        result.data.push(...data);
+      })
+      if (!result.erro) {
+        result = await dao.excluir(Number(entidade.id))
+      }
+      return result
+    } catch (error) {
+
+    }
+    finally {
+      return result
+    }
+
   }
-  atualizar(entidade: AbsEntidadeDominio) {
-    console.log(entidade, "Atualizar");
+  async atualizar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, TYPE_COMMAND.CREATE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
 
-    return "";
+    try {
+      regras.forEach(estrategia => {
+        const { mensagem, erro, data } = estrategia.processar(entidade);
+        result.mensagem += mensagem + '/n';
+        result.erro += erro;
+        result.data.push(...data);
+      })
+      if (!result.erro) {
+        result = await dao.alterar(entidade)
+      }
+      return result
+    } catch (error) {
+
+    }
+    finally {
+      return result
+    }
+
   }
 }
