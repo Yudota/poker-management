@@ -44,49 +44,44 @@ export default class Facade implements IFacade {
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
     let result: Result = new Result('');
 
-    try {
-      regras.forEach(estrategia => {
-        const { mensagem, erro, data } = estrategia.processar(entidade);
-        result.mensagem += mensagem + '/n';
-        result.erro += erro;
-        result.data.push(...data);
-      })
-      if (!result.erro) {
-        result = await dao.criar(entidade)
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
       }
-      return result
-    } catch (error) {
+    }
+    if (!result.erro) {
+      result = await dao.criar(entidade)
+    }
+    console.log('resultado:', result)
+    return result
 
-    }
-    finally {
-      return result
-    }
 
   }
   async consultar(entidade: Partial<AbsEntidadeDominio>) {
     console.log(entidade, TYPE_COMMAND.READ);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
-    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    const regras = this.regras[className][TYPE_COMMAND.READ];
     let result: Result = new Result('');
 
-    try {
-      regras.forEach(estrategia => {
-        const { mensagem, erro, data } = estrategia.processar(entidade as AbsEntidadeDominio);
-        result.mensagem += mensagem + '/n';
-        result.erro += erro;
-        result.data.push(...data);
-      })
-      if (!result.erro) {
-        result = await dao.consultar(entidade as AbsEntidadeDominio)
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
       }
-      return result
-    } catch (error) {
-
     }
-    finally {
-      return result
+    if (!result.erro) {
+      result = await dao.consultar(entidade)
     }
+    console.log('resultado:', result)
+    return result
 
   }
   async deletar(entidade: AbsEntidadeDominio) {
@@ -96,23 +91,20 @@ export default class Facade implements IFacade {
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
     let result: Result = new Result('');
 
-    try {
-      regras.forEach(estrategia => {
-        const { mensagem, erro, data } = estrategia.processar(entidade);
-        result.mensagem += mensagem + '/n';
-        result.erro += erro;
-        result.data.push(...data);
-      })
-      if (!result.erro) {
-        result = await dao.excluir(Number(entidade.id))
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
       }
-      return result
-    } catch (error) {
-
     }
-    finally {
-      return result
+    if (!result.erro) {
+      result = await dao.excluir(Number(entidade.id))
     }
+    console.log('resultado:', result)
+    return result
 
   }
   async atualizar(entidade: AbsEntidadeDominio) {
@@ -123,30 +115,20 @@ export default class Facade implements IFacade {
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
     let result: Result = new Result('');
 
-    try {
-      console.log(`Executando estratégia da entidade: ${className}`);
-      regras.forEach(estrategia => {
-        const { mensagem, erro, data } = estrategia.processar(entidade);
-        result.mensagem += mensagem + '/n';
-        result.erro += erro;
-        result.data.push(...data);
-      })
-      if (!result.erro) {
-        console.log(`Executando a persistencia da entidade: ${className}`);
-
-        result = await dao.alterar(entidade)
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
       }
-      return result
-    } catch (error: any) {
-      console.error(error);
-      result.erro++;
-      result.mensagem = error.message;
-      console.log(result);
-
     }
-    finally {
-      return result
+    if (!result.erro) {
+      result = await dao.alterar(entidade)
     }
+    console.log('resultado:', result)
+    return result
 
   }
 }

@@ -3,6 +3,7 @@ import IDAO from "./IDAO";
 
 import Jogador from "../models/Jogador";
 import Result from "../utils/Result";
+import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
 
 export default class JogadorDAO implements IDAO {
   con: any;
@@ -29,7 +30,7 @@ export default class JogadorDAO implements IDAO {
     console.log('teste destruct:', apelido);
 
     try {
-      console.log('entrou no try')
+      console.log('entrou no try create')
       const result = await this.con.jogadores.create({
         data: {
           nome,
@@ -66,7 +67,8 @@ export default class JogadorDAO implements IDAO {
           }
         },
       })
-      return this.result = result
+      return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+      // return this.result = { mensagem: 'mock', data: 'mock' } as unknown as Result
     } catch (error) {
       console.log('deu merda:', error)
       return this.result
@@ -136,9 +138,17 @@ export default class JogadorDAO implements IDAO {
     })
   }
   async consultar(entidade: Jogador): Promise<Result> {
-    console.log('criando no DAO')
+    console.log('consultando  no DAO')
     console.log('entidade:', entidade)
-    return await this.con.findMany()
+    try {
+
+      const result = await this.con.jogadores.findMany()
+      return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+      // return this.result = { mensagem: 'mock', data: 'mock' } as unknown as Result
+    } catch (error) {
+      console.log('deu merda:', error)
+      return this.result
+    }
   }
 
 }

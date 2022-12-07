@@ -5,5 +5,5 @@ export default interface IDAO {
     criar(entidade: AbsEntidadeDominio): Promise<Result>;
     alterar(entidade: AbsEntidadeDominio): Promise<Result>;
     excluir(id: number): Promise<Result>;
-    consultar(entidade: AbsEntidadeDominio): Promise<Result>;
+    consultar(entidade: Partial<AbsEntidadeDominio>): Promise<Result>;
 }

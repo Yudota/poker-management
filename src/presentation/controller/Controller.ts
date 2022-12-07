@@ -37,6 +37,9 @@ export class Controller {
     if (result!.erro > 0) {
       return res.status(400).json(result);
     }
-
+    if (req.method === MethodRequestTypes.GET) {
+      return res.status(200).json(result);
+    }
+    return res.status(201).json(result);
   }
 }
