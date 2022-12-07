@@ -1,7 +1,8 @@
 
-import { IDao } from "../DAO/IDao";
-import { IEntidadeDominio } from "../models/EntidadeDominio";
-import { IStrategy } from "../Strategy/IStrategy";
+import IDAO from "../DAO/IDAO";
+import JogadorDAO from "../DAO/JogadorDAO";
+import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
+import IStrategy from "../strategy/IStrategy";
 import IFacade from "./IFacade";
 
 // interface Mapper {
@@ -72,31 +73,35 @@ import IFacade from "./IFacade";
 //     }
 // }
 export default class Facade implements IFacade {
-  private daos: Map<String, IDao>
-  private regras: Map<String, Map<String, IStrategy[]>>
-  constructor(){
-    this.regras = new Map<String, Map<String, IStrategy[]>>();
-    this.regras.set
+  private daos: Map<String, IDAO>
+  private regras: Map<String, Map<String, Array<IStrategy>>>
+  constructor() {
+    this.regras = new Map();
 
-    this.daos = new Map<String, IDao>
-    
+    this.daos = new Map()
+
+    this.daos.set('Jogador', new JogadorDAO())
+
   }
-  salvar(entidade: IEntidadeDominio) {
-    console.log(entidade,"SALVAR");
-    
+  criar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, "SALVAR");
+    this.daos.get('JogadorDAO')?.save(entidade)
+
     return "";
   }
-  listar(entidade: IEntidadeDominio) {
+  consultar(entidade: Partial<AbsEntidadeDominio>) {
     console.log(entidade, "Listar");
-    
+
     return "";
   }
-  deletar(entidade: IEntidadeDominio) {
+  deletar(entidade: AbsEntidadeDominio) {
     console.log(entidade, "Delete");
-    
+
     return "";
   }
-  atualizar(entidade: IEntidadeDominio) {
+  atualizar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, "Atualizar");
+
     return "";
   }
 }

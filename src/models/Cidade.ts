@@ -2,10 +2,10 @@ import AbsEntidadeDominio from "./AbsEntidadeDominio";
 import Estado from './Estado';
 export default class Cidade extends AbsEntidadeDominio {
   private _nomeCidade: string;
-  private _est:Estado;
+  private _est: Estado;
 
-  constructor(id:string, nomeCidade:string,  estado:Estado) {
-    super(id);
+  constructor(nomeCidade: string, estado: Estado) {
+    super();
     this._nomeCidade = nomeCidade;
     this._est = estado
   }

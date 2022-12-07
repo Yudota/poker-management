@@ -4,8 +4,8 @@ export default class Telefone extends AbsEntidadeDominio {
   private _ddd: string;
   private _numero: string;
 
-  constructor( id:string, ddd:string, numero:string) {
-    super(id)
+  constructor(ddd: string, numero: string) {
+    super()
     this._ddd = ddd;
     this._numero = numero;
   }
@@ -21,12 +21,6 @@ export default class Telefone extends AbsEntidadeDominio {
   }
   set numero(numero: string) {
     this._numero = numero;
-  }
-  get id(): string | undefined {
-    return super.id;
-  }
-  set id(id: string | undefined) {
-    super.id = id;
   }
 
 

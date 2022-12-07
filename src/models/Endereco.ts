@@ -10,16 +10,15 @@ export default class Endereco extends AbsEntidadeDominio {
   private _cidade: Cidade;
 
   constructor(
-    id:string,
-      tipoLogradouro: string,
-      logradouro: string,
-      numeroEndereco: string,
-      bairro: string,
-      cep: string,
-     complemento: string,
-      cidade: Cidade,
-       ) {
-    super(id)
+    tipoLogradouro: string,
+    logradouro: string,
+    numeroEndereco: string,
+    bairro: string,
+    cep: string,
+    complemento: string,
+    cidade: Cidade,
+  ) {
+    super()
     this._tipoLogradouro = tipoLogradouro
     this._logradouro = logradouro
     this._numeroEndereco = numeroEndereco
@@ -69,11 +68,5 @@ export default class Endereco extends AbsEntidadeDominio {
   }
   set cidade(val: Cidade) {
     this._cidade = val
-  }
-  get id(): string {
-    return super.id || ''
-  }
-  set id(val: string) {
-    super.id = val
   }
 }

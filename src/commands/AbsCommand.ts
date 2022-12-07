@@ -1,10 +1,10 @@
-import Facade from "../facades/Facade";
+import Facade from "../facades/JogadorFacade";
 import IFacade from "../facades/IFacade";
-import { IEntidadeDominio } from "../models/EntidadeDominio";
 import { ICommand } from "./ICommand";
+import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
 
 export abstract class AbsCommand implements ICommand {
-  executar(entidade: IEntidadeDominio) {
+  executar(entidade: AbsEntidadeDominio) {
     return "";
   }
   protected facade: IFacade = new Facade();
