@@ -5,59 +5,61 @@ import Endereco from "../../models/Endereco";
 import Estado from "../../models/Estado";
 import Jogador from "../../models/Jogador";
 import Telefone from "../../models/Telefone";
-import IViewHelper, { IDados } from "./IViewHelper";
+import IViewHelper from "./IViewHelper";
+import { Request } from "express";
 
-type PlayerViewHelper = {
-  nome: string;
-  dataNascimento: string;
-  apelido: string;
-  email: string;
-  cpf: string;
-  senha: string;
-  telefone: {
-    ddd: string;
-    numero: string;
-  };
-  saldo: number;
-  endereco: {
-    cep: string;
-    tipoLogradouro: string;
-    logradouro: string;
-    numero: string;
-    complemento: string;
-    bairro: string;
-    cidade: string;
-    estado: string;
-  };
-  id?: string;
-};
 export class PlayerVH implements IViewHelper {
-  constructor(private readonly _dados: PlayerViewHelper) {}
-
-  getEntidade(): AbsEntidadeDominio {
+  getEntidade(req: Request) {
     const {
-      endereco: dataEndereco,
-      telefone: dataTelefone,
+      nome,
+      dataNascimento,
+      apelido,
+      email,
+      cpf,
+      senha,
+      ddd,
+      numero,
       saldo,
-    } = this._dados;
-    const { tipoLogradouro, logradouro, bairro, cep, complemento, numero } =
-      dataEndereco;
-    const { ddd, numero: numeroTelefone } = dataTelefone;
-    const estado = new Estado({ descricao: dataEndereco.estado });
-    const cidade = new Cidade({ descricao: dataEndereco.cidade });
-    const endereco = new Endereco({
+      logradouro,
+      tipoLogradouro,
+      numeroEndereco,
+      nomeCidade,
+      bairro,
+      complemento,
+      cep,
+      nomeEstado,
+    } = req.body;
+    const id = "55"
+    
+    const estado = new Estado(id,nomeEstado);
+    const cidade = new Cidade(id ,nomeCidade, estado);
+    const end = new Endereco(
+      id,
       tipoLogradouro,
       logradouro,
-      numero,
-      complemento,
+      numeroEndereco,
       bairro,
       cep,
-      cidade,
-      estado,
-    });
-    const telefone = new Telefone({ ddd, numero: numeroTelefone });
-    const carteira = new Carteira({ saldo });
+      complemento,
+      cidade
+    );
+    const tel = new Telefone(id, ddd, numero);
+    const cart = new Carteira(saldo, id);
 
-    return new Jogador({ ...this._dados, endereco, telefone, carteira });
+    const jogador = new Jogador(
+      id,
+      nome,
+      dataNascimento,
+      apelido,
+      email,
+      cpf,
+      senha,
+      tel,
+      cart,
+      end
+    );
+
+    return jogador;
   }
+  setEntidade() {}
 }

@@ -1,9 +1,9 @@
-import { TYPE_COMMAND } from "../commands/Command";
 import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
+import { IEntidadeDominio } from "../models/EntidadeDominio";
 
 export default interface IFacade {
-  processar: (
-    command: TYPE_COMMAND,
-    entidade: AbsEntidadeDominio
-  ) => AbsEntidadeDominio;
+  salvar:(entidade:IEntidadeDominio) => String
+  listar:(entidade: IEntidadeDominio) => String
+  deletar:(entidade:IEntidadeDominio) => String
+  atualizar:(entidade:IEntidadeDominio) => String
 }

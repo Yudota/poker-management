@@ -1,6 +1,5 @@
-import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
-import { IEntidade } from "../models/IEntidade";
+import { IEntidadeDominio } from "../models/EntidadeDominio";
 
 export interface ICommand {
-  executar: (entidade: IEntidade | null | undefined) => String;
+  executar: (entidade: IEntidadeDominio) => String;
 }

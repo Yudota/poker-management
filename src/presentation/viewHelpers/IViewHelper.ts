@@ -1,8 +1,6 @@
-import AbsEntidadeDominio from "../../models/AbsEntidadeDominio";
-
-export interface IDados {
-    [x: string]: any
-}
+import { Request } from "express";
+import { IEntidadeDominio } from "../../models/EntidadeDominio";
 export default interface IViewHelper {
-    getEntidade: (dados: IDados) => AbsEntidadeDominio
+    getEntidade: (req: Request) => IEntidadeDominio
+    setEntidade: () => void
 }

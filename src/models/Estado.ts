@@ -1,21 +1,15 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
-
-
-type EstadoConstructor = {
-  descricao: string;
-  id?: string;
-}
 export default class Estado extends AbsEntidadeDominio {
-  private descricao: string;
+  private nomeEstado: string;
 
-  constructor({ descricao, id }: EstadoConstructor) {
+  constructor(id:string, nomeEstado: string) {
     super(id);
-    this.descricao = descricao;
+    this.nomeEstado = nomeEstado;
   }
   public getDescricao(): string {
-    return this.descricao;
+    return this.nomeEstado;
   }
-  public setDescricao(descricao: string): void {
-    this.descricao = descricao;
+  public setDescricao(nomeEstado: string): void {
+    this.nomeEstado = nomeEstado;
   }
 }

@@ -1,1 +1,1 @@
-export * from './player.routes'
+export * from './routes'
