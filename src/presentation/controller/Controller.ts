@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { ICommand } from "../../commands/ICommand";
 import { MethodRequestTypes } from "./RequesType";
-import { ListarCommand } from "../../commands/implementacao/ListarCommand";
+import { ListarCommand } from "../../commands/implementacao/ConsultarCommand";
 import IViewHelper from "../viewHelpers/IViewHelper";
 import { PlayerVH } from "../viewHelpers/PlayerVH";
-import { SalvarCommand } from "../../commands/implementacao/SalvarCommand";
+import { SalvarCommand } from "../../commands/implementacao/CriarCommand";
 import { AtualizarCommand } from "../../commands/implementacao/AtualizarCommand";
 import { DeletarCommand } from "../../commands/implementacao/DeletarCommand";
 export class Controller {

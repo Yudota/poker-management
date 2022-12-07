@@ -4,7 +4,6 @@ import { AbsCommand } from "../AbsCommand";
 
 export class AtualizarCommand extends AbsCommand {
   executar(entidade: AbsEntidadeDominio) {
-    this.facade.atualizar(entidade)
-    return "";
+    return this.facade.atualizar(entidade)
   }
 }
