@@ -1,5 +1,6 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
 import Cidade from "./Cidade";
+import Estado from "./Estado";
 export default class Endereco extends AbsEntidadeDominio {
   private _tipoLogradouro: string;
   private _logradouro: string;
@@ -8,6 +9,7 @@ export default class Endereco extends AbsEntidadeDominio {
   private _cep: string;
   private _complemento: string;
   private _cidade: Cidade;
+  private _estado: Estado;
 
   constructor(
     tipoLogradouro: string,
@@ -17,6 +19,7 @@ export default class Endereco extends AbsEntidadeDominio {
     cep: string,
     complemento: string,
     cidade: Cidade,
+    estado: Estado
   ) {
     super()
     this._tipoLogradouro = tipoLogradouro
@@ -26,6 +29,7 @@ export default class Endereco extends AbsEntidadeDominio {
     this._cep = cep
     this._complemento = complemento
     this._cidade = cidade
+    this._estado = estado
   }
   get tipoLogradouro(): string {
     return this._tipoLogradouro
@@ -68,5 +72,11 @@ export default class Endereco extends AbsEntidadeDominio {
   }
   set cidade(val: Cidade) {
     this._cidade = val
+  }
+  get estado(): Estado {
+    return this._estado
+  }
+  set estado(val: Estado) {
+    this._estado = val
   }
 }

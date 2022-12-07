@@ -8,7 +8,9 @@ import Result from "../utils/Result";
 import IFacade from "./IFacade";
 import { TYPE_MODEL } from "./types/typeModel";
 
-type MapperStrategies = { [KEY in TYPE_COMMAND]: Array<IStrategy> }
+type MapperStrategies = {
+  [KEY in TYPE_COMMAND]: Array<IStrategy>
+}
 type MapperModelStrategy = {
   [KEY in TYPE_MODEL]: MapperStrategies;
 };
@@ -25,7 +27,8 @@ export default class Facade implements IFacade {
         [TYPE_COMMAND.READ]: [],
         [TYPE_COMMAND.UPDATE]: [],
         [TYPE_COMMAND.DELETE]: [],
-      }
+      },
+
     }
 
 
@@ -61,7 +64,7 @@ export default class Facade implements IFacade {
 
   }
   async consultar(entidade: Partial<AbsEntidadeDominio>) {
-    console.log(entidade, TYPE_COMMAND.CREATE);
+    console.log(entidade, TYPE_COMMAND.READ);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
@@ -87,7 +90,7 @@ export default class Facade implements IFacade {
 
   }
   async deletar(entidade: AbsEntidadeDominio) {
-    console.log(entidade, TYPE_COMMAND.CREATE);
+    console.log(entidade, TYPE_COMMAND.DELETE);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
@@ -113,13 +116,15 @@ export default class Facade implements IFacade {
 
   }
   async atualizar(entidade: AbsEntidadeDominio) {
-    console.log(entidade, TYPE_COMMAND.CREATE);
+    console.log(entidade, TYPE_COMMAND.UPDATE);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
+    console.log(`DAO: ${JSON.stringify(dao, null, 2)}`);
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
     let result: Result = new Result('');
 
     try {
+      console.log(`Executando estratégia da entidade: ${className}`);
       regras.forEach(estrategia => {
         const { mensagem, erro, data } = estrategia.processar(entidade);
         result.mensagem += mensagem + '/n';
@@ -127,10 +132,16 @@ export default class Facade implements IFacade {
         result.data.push(...data);
       })
       if (!result.erro) {
+        console.log(`Executando a persistencia da entidade: ${className}`);
+
         result = await dao.alterar(entidade)
       }
       return result
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error);
+      result.erro++;
+      result.mensagem = error.message;
+      console.log(result);
 
     }
     finally {

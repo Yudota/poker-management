@@ -29,10 +29,9 @@ export class PlayerVH implements IViewHelper {
       cep,
       nomeEstado,
     } = req.body;
-    const id = "55"
 
     const estado = new Estado({ nomeEstado });
-    const cidade = new Cidade(id, nomeCidade);
+    const cidade = new Cidade(nomeCidade, estado);
     const end = new Endereco(
       tipoLogradouro,
       logradouro,
@@ -40,7 +39,8 @@ export class PlayerVH implements IViewHelper {
       bairro,
       cep,
       complemento,
-      cidade
+      cidade,
+      estado
     );
     const tel = new Telefone(ddd, numeroTelefone);
     const cart = new Carteira(saldo);
@@ -59,5 +59,9 @@ export class PlayerVH implements IViewHelper {
 
     return jogador;
   }
-  setEntidade() { }
+  setEntidadeToJSON(ed: AbsEntidadeDominio) {
+    const response = JSON.stringify({ ...ed });
+
+    return response
+  }
 }

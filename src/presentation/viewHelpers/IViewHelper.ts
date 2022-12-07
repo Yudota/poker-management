@@ -1,6 +1,6 @@
-import { Request } from "express";
+import { Request, Response } from "express";
 import AbsEntidadeDominio from "../../models/AbsEntidadeDominio";
 export default interface IViewHelper {
     getEntidade: (req: Request) => AbsEntidadeDominio
-    setEntidade: () => void
+    setEntidadeToJSON: (ed: AbsEntidadeDominio) => string
 }

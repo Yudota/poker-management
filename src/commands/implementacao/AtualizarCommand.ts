@@ -3,7 +3,7 @@ import { AbsCommand } from "../AbsCommand";
 
 
 export class AtualizarCommand extends AbsCommand {
-  executar(entidade: AbsEntidadeDominio) {
-    return this.facade.atualizar(entidade)
+  async executar(entidade: AbsEntidadeDominio) {
+    return await this.facade.atualizar(entidade)
   }
 }

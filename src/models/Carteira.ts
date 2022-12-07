@@ -8,17 +8,11 @@ export default class Carteira extends AbsEntidadeDominio {
     this._saldo = saldo;
   }
 
-  public getSaldo(): string {
+  public get saldo(): string {
     return this._saldo;
   }
-  public setSaldo(saldo: string): void {
+  public set saldo(saldo: string) {
     this._saldo = saldo;
-  }
-  public getId(): string | undefined {
-    return super.id;
-  }
-  public setId(id: string | undefined): void {
-    super.id = id;
   }
 
 }

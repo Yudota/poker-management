@@ -25,7 +25,7 @@ export class Controller {
     this.viewHelpers = new Map<String, IViewHelper>();
     this.viewHelpers.set("/player", new PlayerVH());
   }
-  async handle(req: Request) {
+  async handle(req: Request, res: Response) {
     this._url = req.url;
     this._operacao = req.method;
     this.vh = this.viewHelpers.get(this._url);
@@ -33,6 +33,10 @@ export class Controller {
 
     this.cmd = this.commands.get(this._operacao);
 
-    this.cmd?.executar(entidade);
+    const result = await this.cmd?.executar(entidade);
+    if (result!.erro > 0) {
+      return res.status(400).json(result);
+    }
+
   }
 }
