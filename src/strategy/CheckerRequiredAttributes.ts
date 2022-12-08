@@ -5,10 +5,9 @@ import IStrategy from "./IStrategy";
 export default class CheckerRequiredAttributes implements IStrategy {
     attributesNotRequired: string[];
     customCheckers: Map<string, IStrategy>;
-    constructor(listAttributeNotRequired: string[], listCustomCheckers: { attribute: string, checker: IStrategy }[] = []) {
+    constructor(listAttributeNotRequired: string[]) {
         this.attributesNotRequired = listAttributeNotRequired;
         this.customCheckers = new Map();
-        listCustomCheckers.forEach(({ attribute, checker }) => this.customCheckers.set(attribute, checker))
     }
     processar(entidade: AbsEntidadeDominio): Result {
         let mensagem = '';
