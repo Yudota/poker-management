@@ -1,102 +1,134 @@
 
-import { IDao } from "../DAO/IDao";
-import { IEntidadeDominio } from "../models/EntidadeDominio";
-import { IStrategy } from "../Strategy/IStrategy";
+import { TYPE_COMMAND } from "../commands/types/typeCommand";
+import IDAO from "../DAO/IDAO";
+import JogadorDAO from "../DAO/JogadorDAO";
+import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
+import IStrategy from "../strategy/IStrategy";
+import Result from "../utils/Result";
 import IFacade from "./IFacade";
+import { TYPE_MODEL } from "./types/typeModel";
 
-// interface Mapper {
-//     [x:]
-// }
-
-// const mapper = {
-//     'Create': {
-//         'JOGADOR': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//             strategy5,
-//         ],
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'Read': {
-//         'JOGADOR': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//             strategy5,
-//         ],
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'Update': {
-//         'JOGADOR': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//             strategy5,
-//         ],
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'Delete': {
-//         'JOGADOR': logicDeleteJogador,
-//         'ESTADO': [
-//             strategy1,
-//             strategy2,
-//             strategy6,
-//         ]
-//     },
-//     'BANANA': {
-//         'NANICA': [
-//             strategy1,
-//             strategy2,
-//             strategy3,
-//             strategy4,
-//         ],
-//         'PRATA': [
-//             ...
-//         ],
-//     }
-// }
+type MapperStrategies = {
+  [KEY in TYPE_COMMAND]: Array<IStrategy>
+}
+type MapperModelStrategy = {
+  [KEY in TYPE_MODEL]: MapperStrategies;
+};
+type MapperModelDAO = {
+  [KEY in TYPE_MODEL]: IDAO;
+}
 export default class Facade implements IFacade {
-  private daos: Map<String, IDao>
-  private regras: Map<String, Map<String, IStrategy[]>>
-  constructor(){
-    this.regras = new Map<String, Map<String, IStrategy[]>>();
-    this.regras.set
+  private daos: MapperModelDAO
+  private regras: MapperModelStrategy
+  constructor() {
+    this.regras = {
+      [TYPE_MODEL.JOGADOR]: {
+        [TYPE_COMMAND.CREATE]: [],
+        [TYPE_COMMAND.READ]: [],
+        [TYPE_COMMAND.UPDATE]: [],
+        [TYPE_COMMAND.DELETE]: [],
+      },
 
-    this.daos = new Map<String, IDao>
-    
+    }
+
+
+    this.daos = {
+      [TYPE_MODEL.JOGADOR]: new JogadorDAO()
+    }
+
   }
-  salvar(entidade: IEntidadeDominio) {
-    console.log(entidade,"SALVAR");
-    
-    return "";
+  async criar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, TYPE_COMMAND.CREATE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
+
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
+      }
+    }
+    if (!result.erro) {
+      result = await dao.criar(entidade)
+    }
+    console.log('resultado:', result)
+    return result
+
+
   }
-  listar(entidade: IEntidadeDominio) {
-    console.log(entidade, "Listar");
-    
-    return "";
+  async consultar(entidade: Partial<AbsEntidadeDominio>) {
+    console.log(entidade, TYPE_COMMAND.READ);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.READ];
+    let result: Result = new Result('');
+
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
+      }
+    }
+    if (!result.erro) {
+      result = await dao.consultar(entidade)
+    }
+    console.log('resultado:', result)
+    return result
+
   }
-  deletar(entidade: IEntidadeDominio) {
-    console.log(entidade, "Delete");
-    
-    return "";
+  async deletar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, TYPE_COMMAND.DELETE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
+
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
+      }
+    }
+    if (!result.erro) {
+      result = await dao.excluir(Number(entidade.id))
+    }
+    console.log('resultado:', result)
+    return result
+
   }
-  atualizar(entidade: IEntidadeDominio) {
-    return "";
+  async atualizar(entidade: AbsEntidadeDominio) {
+    console.log(entidade, TYPE_COMMAND.UPDATE);
+    const className = entidade.constructor.name as TYPE_MODEL;
+    const dao = this.daos[className];
+    console.log(`DAO: ${JSON.stringify(dao, null, 2)}`);
+    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    let result: Result = new Result('');
+
+    for (const estrategia of regras) {
+      const { mensagem, erro, data } = estrategia.processar(entidade);
+      result.mensagem += mensagem + '/n';
+      result.erro += erro;
+      result.data.push(...data);
+      if (result.erro) {
+        break;
+      }
+    }
+    if (!result.erro) {
+      result = await dao.alterar(entidade)
+    }
+    console.log('resultado:', result)
+    return result
+
   }
 }

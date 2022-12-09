@@ -1,15 +1,17 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
+
+type Props = { nomeEstado: string }
 export default class Estado extends AbsEntidadeDominio {
   private nomeEstado: string;
 
-  constructor(id:string, nomeEstado: string) {
-    super(id);
+  constructor({ nomeEstado }: Props) {
+    super();
     this.nomeEstado = nomeEstado;
   }
-  public getDescricao(): string {
+  get descricao(): string {
     return this.nomeEstado;
   }
-  public setDescricao(nomeEstado: string): void {
+  set descricao(nomeEstado: string) {
     this.nomeEstado = nomeEstado;
   }
 }

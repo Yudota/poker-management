@@ -1,9 +1,9 @@
-import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
-import { IEntidadeDominio } from "../models/EntidadeDominio";
+import AbsEntidadeDominio from "../models/AbsEntidadeDominio"
+import Result from "../utils/Result"
 
 export default interface IFacade {
-  salvar:(entidade:IEntidadeDominio) => String
-  listar:(entidade: IEntidadeDominio) => String
-  deletar:(entidade:IEntidadeDominio) => String
-  atualizar:(entidade:IEntidadeDominio) => String
+  criar: (entidade: AbsEntidadeDominio) => Promise<Result>
+  consultar: (objParcialED: Partial<AbsEntidadeDominio>) => Promise<Result>
+  atualizar: (entidade: AbsEntidadeDominio) => Promise<Result>
+  deletar: (entidade: AbsEntidadeDominio) => Promise<Result>
 }

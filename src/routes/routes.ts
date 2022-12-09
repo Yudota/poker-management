@@ -1,13 +1,13 @@
-import { Request, Response, Router } from "express";
-import { Controller }from "../presentation/controller/Controller";
+import { Router } from "express";
+import { Controller } from "../presentation/controller/Controller";
 
 
 const routes = Router();
-const endpoint = "players";
+const endpoint = "player";
 const controller = new Controller();
 
-routes.get("/player", controller.handle);
-routes.post("/player", controller.handle);
-routes.put("/player",controller.handle);
-routes.delete("/player",controller.handle);
+routes.get(`/${endpoint}`, controller.handle);
+routes.post(`/${endpoint}`, controller.handle);
+routes.put(`/${endpoint}`, controller.handle);
+routes.delete(`/${endpoint}`, controller.handle);
 export { routes };

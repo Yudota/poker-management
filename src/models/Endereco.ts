@@ -1,5 +1,6 @@
 import AbsEntidadeDominio from "./AbsEntidadeDominio";
 import Cidade from "./Cidade";
+import Estado from "./Estado";
 export default class Endereco extends AbsEntidadeDominio {
   private _tipoLogradouro: string;
   private _logradouro: string;
@@ -8,18 +9,19 @@ export default class Endereco extends AbsEntidadeDominio {
   private _cep: string;
   private _complemento: string;
   private _cidade: Cidade;
+  private _estado: Estado;
 
   constructor(
-    id:string,
-      tipoLogradouro: string,
-      logradouro: string,
-      numeroEndereco: string,
-      bairro: string,
-      cep: string,
-     complemento: string,
-      cidade: Cidade,
-       ) {
-    super(id)
+    tipoLogradouro: string,
+    logradouro: string,
+    numeroEndereco: string,
+    bairro: string,
+    cep: string,
+    complemento: string,
+    cidade: Cidade,
+    estado: Estado
+  ) {
+    super()
     this._tipoLogradouro = tipoLogradouro
     this._logradouro = logradouro
     this._numeroEndereco = numeroEndereco
@@ -27,6 +29,7 @@ export default class Endereco extends AbsEntidadeDominio {
     this._cep = cep
     this._complemento = complemento
     this._cidade = cidade
+    this._estado = estado
   }
   get tipoLogradouro(): string {
     return this._tipoLogradouro
@@ -40,10 +43,10 @@ export default class Endereco extends AbsEntidadeDominio {
   set logradouro(val: string) {
     this._logradouro = val
   }
-  get numero(): string {
+  get numeroEndereco(): string {
     return this._numeroEndereco
   }
-  set numero(val: string) {
+  set numeroEndereco(val: string) {
     this._numeroEndereco = val
   }
   get bairro(): string {
@@ -70,10 +73,10 @@ export default class Endereco extends AbsEntidadeDominio {
   set cidade(val: Cidade) {
     this._cidade = val
   }
-  get id(): string {
-    return super.id || ''
+  get estado(): Estado {
+    return this._estado
   }
-  set id(val: string) {
-    super.id = val
+  set estado(val: Estado) {
+    this._estado = val
   }
 }

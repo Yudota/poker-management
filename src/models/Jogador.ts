@@ -15,19 +15,17 @@ export default class Jogador extends AbsEntidadeDominio {
   private _endereco: Endereco;
 
   constructor(
-    id:string,
-    nome:string,
-    dataNascimento:string,
-    apelido:string,
-    email:string,
-    cpf:string,
-    senha:string,
-    telefone:Telefone,
-    carteira:Carteira,
-    endereco:Endereco
-    )
-   {
-    super(id)
+    nome: string,
+    dataNascimento: string,
+    apelido: string,
+    email: string,
+    cpf: string,
+    senha: string,
+    telefone: Telefone,
+    carteira: Carteira,
+    endereco: Endereco
+  ) {
+    super()
     this._nome = nome;
     this._dataNascimento = dataNascimento;
     this._apelido = apelido;

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { ICommand } from "../../commands/ICommand";
 import { MethodRequestTypes } from "./RequesType";
-import { ListarCommand } from "../../commands/implementacao/ListarCommand";
+import { ListarCommand } from "../../commands/implementacao/ConsultarCommand";
 import IViewHelper from "../viewHelpers/IViewHelper";
 import { PlayerVH } from "../viewHelpers/PlayerVH";
-import { SalvarCommand } from "../../commands/implementacao/SalvarCommand";
+import { SalvarCommand } from "../../commands/implementacao/CriarCommand";
 import { AtualizarCommand } from "../../commands/implementacao/AtualizarCommand";
 import { DeletarCommand } from "../../commands/implementacao/DeletarCommand";
 export class Controller {
@@ -25,7 +25,7 @@ export class Controller {
     this.viewHelpers = new Map<String, IViewHelper>();
     this.viewHelpers.set("/player", new PlayerVH());
   }
-  async handle(req: Request) {
+  async handle(req: Request, res: Response) {
     this._url = req.url;
     this._operacao = req.method;
     this.vh = this.viewHelpers.get(this._url);
@@ -33,6 +33,13 @@ export class Controller {
 
     this.cmd = this.commands.get(this._operacao);
 
-    this.cmd?.executar(entidade);
+    const result = await this.cmd?.executar(entidade);
+    if (result!.erro > 0) {
+      return res.status(400).json(result);
+    }
+    if (req.method === MethodRequestTypes.GET) {
+      return res.status(200).json(result);
+    }
+    return res.status(201).json(result);
   }
 }
