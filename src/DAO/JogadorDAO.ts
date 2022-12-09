@@ -4,12 +4,17 @@ import IDAO from "./IDAO";
 import Jogador from "../models/Jogador";
 import Result from "../utils/Result";
 import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
+import { jogadores, PrismaClient } from "@prisma/client";
 
 export default class JogadorDAO implements IDAO {
-  con: any;
+  con: PrismaClient;
   result: Result
   constructor() {
     this.criar = this.criar.bind(this)
+    this.consultar = this.consultar.bind(this)
+    this.excluir = this.excluir.bind(this)
+    this.alterar = this.alterar.bind(this)
+
     this.result = new Result('');
     this.con = ConnectionFactory.criar()
   }
@@ -89,53 +94,57 @@ export default class JogadorDAO implements IDAO {
       senha,
       telefone
     } = entidade
-    const result = await this.con.update({
-      where: { id },
-      data: {
-        id,
-        nome,
-        dataNascimento,
-        apelido,
-        email,
-        cpf,
-        senha,
-        telefones: {
-          create: { ddd: telefone.ddd, numeroCelular: telefone.numero },
-        },
-        carteiras: {
-          create: { saldo: carteira.saldo },
-        },
-        enderecos: {
-          create: {
-            tipologradouro: endereco.tipoLogradouro,
-            numero: endereco.numeroEndereco,
-            bairro: endereco.bairro,
-            cep: endereco.cep,
-            complemento: endereco.compĺemento,
-            cidades: {
-              create: {
-                descricao: endereco.cidade.nomeCidade,
-                estados: {
-                  create: {
-                    descricao: endereco.estado.descricao,
-                  }
-                }
-              }
-            }
+    // const result = await this.con.jogadores.update({
+    //   where: { id },
+    //   data: {
+    //     id,
+    //     nome,
+    //     dataNascimento,
+    //     apelido,
+    //     email,
+    //     cpf,
+    //     senha,
+    //     telefones: {
+    //       create: { ddd: telefone.ddd, numero: telefone.numero },
+    //     },
+    //     carteiras: {
+    //       update: { saldo: carteira.saldo },
+    //     },
+    //     enderecos: {
+    //       update: {
+    //         tipologradouro: endereco.tipoLogradouro,
+    //         numero: endereco.numeroEndereco,
+    //         bairro: endereco.bairro,
+    //         cep: endereco.cep,
+    //         complemento: endereco.compĺemento,
+    //         cidades: {
+    //           update: {
+    //             descricao: endereco.cidade.nomeCidade,
+    //             estados: {
+    //               update: {
+    //                 descricao: endereco.estado.descricao,
+    //               }
+    //             }
+    //           }
+    //         }
 
-          }
-        }
-      },
-    })
-    console.log(result)
-    return result
+    //       }
+    //     }
+    //   },
+    // })
+    // console.log(result)
+    // this.result.data = JSON.stringify(result)
+    return this.result
   }
   async excluir(id: number): Promise<Result> {
-    console.log('criando no DAO')
-    console.log('entidade:', id)
-    return await this.con.delete({
+    const player = await this.con.jogadores.findFirst({
       where: { id },
     })
+    console.log(player)
+    this.result.data = await this.con.jogadores.delete({
+      where: { id },
+    }) ? 'Jogador deletado' : 'Deu problema'
+    return this.result
   }
   async consultar(entidade: Jogador): Promise<Result> {
     console.log('consultando  no DAO')

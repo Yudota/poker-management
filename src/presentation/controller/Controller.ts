@@ -29,6 +29,8 @@ export class Controller {
     this._url = req.url;
     this._operacao = req.method;
     this.vh = this.viewHelpers.get(this._url);
+    console.log('data json:', req.body);
+
     const entidade = this.vh!.getEntidade(req);
 
     this.cmd = this.commands.get(this._operacao);

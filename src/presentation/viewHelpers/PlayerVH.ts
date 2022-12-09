@@ -9,8 +9,11 @@ import IViewHelper from "./IViewHelper";
 import { Request } from "express";
 
 export class PlayerVH implements IViewHelper {
+  constructor() {
+  }
   getEntidade(req: Request) {
     const {
+      id,
       nome,
       dataNascimento,
       apelido,
@@ -54,7 +57,8 @@ export class PlayerVH implements IViewHelper {
       senha,
       tel,
       cart,
-      end
+      end,
+      id
     );
 
     return jogador;

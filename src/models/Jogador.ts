@@ -23,9 +23,10 @@ export default class Jogador extends AbsEntidadeDominio {
     senha: string,
     telefone: Telefone,
     carteira: Carteira,
-    endereco: Endereco
+    endereco: Endereco,
+    id?: string
   ) {
-    super()
+    super(id)
     this._nome = nome;
     this._dataNascimento = dataNascimento;
     this._apelido = apelido;
