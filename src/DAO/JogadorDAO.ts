@@ -136,15 +136,23 @@ export default class JogadorDAO implements IDAO {
     // this.result.data = JSON.stringify(result)
     return this.result
   }
-  async excluir(id: number): Promise<Result> {
-    const player = await this.con.jogadores.findFirst({
-      where: { id },
-    })
-    console.log(player)
-    this.result.data = await this.con.jogadores.delete({
-      where: { id },
-    }) ? 'Jogador deletado' : 'Deu problema'
+  async excluir(id: number): Promise<any> {
+    try {
+      const player = await this.con.jogadores.findUnique({
+        where: { id },
+      })
+      console.log('jogador encontrado:', player)
+      const resultadoBanco = await this.con.jogadores.delete({
+        where: { id },
+      })
+      console.log('jogador removido:', resultadoBanco)
+
+    } catch (error) {
+      console.log(error)
+      return this.result.data
+    }
     return this.result
+
   }
   async consultar(entidade: Jogador): Promise<Result> {
     console.log('consultando  no DAO')

@@ -59,8 +59,8 @@ model jogadores {
   created_at     DateTime    @default(now()) @db.Timestamp(6)
   last_update    DateTime    @default(now()) @db.Timestamp(6)
   dataNascimento String?     @db.VarChar(255)
-  carteiras      carteiras   @relation(fields: [fk_carteira], references: [id], map: "fk_jogadores_carteiras", onDelete: Cascade)
-  enderecos      enderecos   @relation(fields: [fk_endereco], references: [id], map: "fk_jogadores_enderecos", onDelete: NoAction)
+  carteiras      carteiras   @relation(fields: [fk_carteira], references: [id], onDelete: Cascade, map: "fk_jogadores_carteiras")
+  enderecos      enderecos   @relation(fields: [fk_endereco], references: [id], onDelete: NoAction, map: "fk_jogadores_enderecos")
   telefones      telefones[]
 }
 
@@ -71,5 +71,5 @@ model telefones {
   fk_jogador  Int
   created_at  DateTime  @default(now()) @db.Timestamp(6)
   last_update DateTime  @default(now()) @db.Timestamp(6)
-  jogadores   jogadores @relation(fields: [fk_jogador], references: [id], map: "fk_telefones_jogadores", onDelete: Cascade )
+  jogadores   jogadores @relation(fields: [fk_jogador], references: [id], onDelete: Cascade, map: "fk_telefones_jogadores")
 }
