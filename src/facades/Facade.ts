@@ -90,7 +90,7 @@ export default class Facade implements IFacade {
     const dao = this.daos[className];
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
     let result: Result = new Result('');
-
+    let response
     for (const estrategia of regras) {
       const { mensagem, erro, data } = estrategia.processar(entidade);
       result.mensagem += mensagem + '/n';
@@ -101,10 +101,10 @@ export default class Facade implements IFacade {
       }
     }
     if (!result.erro) {
-      result = await dao.excluir(Number(entidade.id))
+      response = await dao.excluir(Number(entidade.id))
     }
-    console.log('resultado:', result)
-    return result
+    console.log('resultado:', response)
+    return response
 
   }
   async atualizar(entidade: AbsEntidadeDominio) {

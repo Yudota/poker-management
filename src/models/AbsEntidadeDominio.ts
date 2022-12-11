@@ -1,10 +1,12 @@
 export default abstract class AbsEntidadeDominio {
-  protected _id?: string;
-
-  get id(): string | undefined {
+  protected _id?: number;
+  constructor(id?: string) {
+    this._id = Number(id);
+  }
+  get id(): number | undefined {
     return this._id;
   }
-  set id(id: string | undefined) {
+  set id(id: number | undefined) {
     this._id = id
   }
 
