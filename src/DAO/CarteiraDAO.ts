@@ -18,7 +18,7 @@ export default class CarteiraDAO extends AbstractDAO {
   async criar(carteira: Carteira): Promise<Result> {
 
     try {
-      const result = await this.con.carteiras.create({
+      const result = await AbstractDAO.con.carteiras.create({
         data: {
           saldo: carteira.saldo,
         },
@@ -31,7 +31,7 @@ export default class CarteiraDAO extends AbstractDAO {
   }
   async alterar(entidade: Carteira): Promise<any> {
     try {
-      const result = await this.con.carteiras.update({
+      const result = await AbstractDAO.con.carteiras.update({
         where: { id: Number(entidade.id) },
         data: {
           saldo: entidade.saldo
@@ -45,7 +45,7 @@ export default class CarteiraDAO extends AbstractDAO {
   }
   async excluir(id: number): Promise<any> {
     try {
-      const result = await this.con.carteiras.delete({
+      const result = await AbstractDAO.con.carteiras.delete({
         where: { id },
 
       })
@@ -58,7 +58,7 @@ export default class CarteiraDAO extends AbstractDAO {
   async consultar(entidade?: Partial<Carteira> | undefined): Promise<any> {
     if (entidade) {
       try {
-        const result = await this.con.carteiras.findFirst({
+        const result = await AbstractDAO.con.carteiras.findFirst({
           where: { id: Number(entidade.id) },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -69,7 +69,7 @@ export default class CarteiraDAO extends AbstractDAO {
     }
     else {
       try {
-        const result = await this.con.carteiras.findMany()
+        const result = await AbstractDAO.con.carteiras.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
         console.log('deu merda:', error)

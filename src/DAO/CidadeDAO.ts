@@ -23,7 +23,7 @@ export default class CidadeDAO extends AbstractDAO {
   async consultar(entidade?: Cidade | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await this.con.cidades.findFirst({
+        const result = await AbstractDAO.con.cidades.findFirst({
           where: { descricao: entidade.nomeCidade },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -34,7 +34,7 @@ export default class CidadeDAO extends AbstractDAO {
     }
     else {
       try {
-        const result = await this.con.cidades.findMany()
+        const result = await AbstractDAO.con.cidades.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
         console.log('deu merda:', error)

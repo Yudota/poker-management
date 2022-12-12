@@ -13,8 +13,6 @@ export default class EstadoDAO extends AbstractDAO {
     this.excluir = this.excluir.bind(this)
     this.alterar = this.alterar.bind(this)
 
-    this.result = new Result('');
-    this.con = ConnectionFactory.criar()
   }
   async criar(): Promise<any> {
     return this.result = { mensagem: 'Erro. Não é possível criar uma nova cidade.', data: {} } as unknown as Result
@@ -28,7 +26,7 @@ export default class EstadoDAO extends AbstractDAO {
   async consultar(entidade?: Estado | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await this.con.estados.findFirst({
+        const result = await AbstractDAO.con.estados.findFirst({
           where: { id: Number(entidade.id) },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -39,7 +37,7 @@ export default class EstadoDAO extends AbstractDAO {
     }
     else {
       try {
-        const result = await this.con.estados.findMany()
+        const result = await AbstractDAO.con.estados.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
         console.log('deu merda:', error)
@@ -49,7 +47,7 @@ export default class EstadoDAO extends AbstractDAO {
   }
   async consultaPorUF(entidade: Estado): Promise<Result> {
     try {
-      const result = await this.con.estados.findFirst({
+      const result = await AbstractDAO.con.estados.findFirst({
         where: { uf: entidade.uf },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result

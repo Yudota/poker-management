@@ -17,7 +17,7 @@ export default class TelefoneDAO extends AbstractDAO {
   async criar(entidade: Telefone): Promise<Result> {
     const { ddd, numero } = entidade
     try {
-      const result = await this.con.telefones.create({
+      const result = await AbstractDAO.con.telefones.create({
         data: {
           ddd,
           numero
@@ -32,7 +32,7 @@ export default class TelefoneDAO extends AbstractDAO {
   async alterar(entidade: Telefone): Promise<Result> {
     const { ddd, numero } = entidade
     try {
-      const result = await this.con.telefones.update({
+      const result = await AbstractDAO.con.telefones.update({
         where: { id: Number(entidade.id) },
         data: {
           ddd,
@@ -47,7 +47,7 @@ export default class TelefoneDAO extends AbstractDAO {
   }
   async excluir(id: number): Promise<Result> {
     try {
-      const result = await this.con.telefones.delete({
+      const result = await AbstractDAO.con.telefones.delete({
         where: { id },
 
       })
@@ -60,7 +60,7 @@ export default class TelefoneDAO extends AbstractDAO {
   async consultar(entidade?: Partial<Telefone> | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await this.con.telefones.findFirst({
+        const result = await AbstractDAO.con.telefones.findFirst({
           where: { id: Number(entidade.id) },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -71,7 +71,7 @@ export default class TelefoneDAO extends AbstractDAO {
     }
     else {
       try {
-        const result = await this.con.telefones.findMany()
+        const result = await AbstractDAO.con.telefones.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
         console.log('deu merda:', error)

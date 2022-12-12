@@ -39,7 +39,7 @@ export default class JogadorDAO extends AbstractDAO {
       const telefoneDAO = new TelefoneDAO()
       const { id: fk_telefone } = (await telefoneDAO.criar(entidade.telefone)).data as unknown as Telefone
 
-      const result = await this.con.jogadores.create({
+      const result = await AbstractDAO.con.jogadores.create({
         data: {
           nome: entidade.nome,
           data_nascimento: entidade.dataNascimento,
@@ -71,7 +71,7 @@ export default class JogadorDAO extends AbstractDAO {
     } = entidade
     super.id = id
 
-    const result = await this.con.jogadores.update({
+    const result = await AbstractDAO.con.jogadores.update({
       where: { id: Number(id) },
       data: {
         id: Number(id),
@@ -90,11 +90,11 @@ export default class JogadorDAO extends AbstractDAO {
   async excluir(id: number): Promise<any> {
     super.id = id
     try {
-      const player = await this.con.jogadores.findUnique({
+      const player = await AbstractDAO.con.jogadores.findUnique({
         where: { id },
       })
       console.log('jogador encontrado:', player)
-      const resultadoBanco = await this.con.jogadores.delete({
+      const resultadoBanco = await AbstractDAO.con.jogadores.delete({
         where: { id },
       })
       console.log('jogador removido:', resultadoBanco)
@@ -110,7 +110,7 @@ export default class JogadorDAO extends AbstractDAO {
     super.id = entidade!.id
     if (entidade) {
       try {
-        const result = await this.con.jogadores.findUnique({
+        const result = await AbstractDAO.con.jogadores.findUnique({
           where: { id: entidade.id },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -121,7 +121,7 @@ export default class JogadorDAO extends AbstractDAO {
     }
     else {
       try {
-        const result = await this.con.jogadores.findMany()
+        const result = await AbstractDAO.con.jogadores.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
         console.log('deu merda:', error)
@@ -131,5 +131,3 @@ export default class JogadorDAO extends AbstractDAO {
   }
 
 }
-
-const 
