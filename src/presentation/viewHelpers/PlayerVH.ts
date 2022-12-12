@@ -13,7 +13,10 @@ export class PlayerVH implements IViewHelper {
   }
   getEntidade(req: Request) {
     const {
-      id,
+      idJogador,
+      idEndereco,
+      idCarteira,
+      idTelefone,
       nome,
       dataNascimento,
       apelido,
@@ -30,10 +33,10 @@ export class PlayerVH implements IViewHelper {
       bairro,
       complemento,
       cep,
-      nomeEstado,
+      uf,
     } = req.body;
 
-    const estado = new Estado({ nomeEstado });
+    const estado = new Estado({ uf });
     const cidade = new Cidade(nomeCidade, estado);
     const end = new Endereco(
       tipoLogradouro,
@@ -43,10 +46,11 @@ export class PlayerVH implements IViewHelper {
       cep,
       complemento,
       cidade,
-      estado
+      estado,
+      idEndereco
     );
-    const tel = new Telefone(ddd, numeroTelefone);
-    const cart = new Carteira(saldo);
+    const tel = new Telefone(ddd, numeroTelefone, idTelefone);
+    const cart = new Carteira(saldo, idCarteira);
 
     const jogador = new Jogador(
       nome,
@@ -58,7 +62,7 @@ export class PlayerVH implements IViewHelper {
       tel,
       cart,
       end,
-      id
+      idJogador
     );
 
     return jogador;
