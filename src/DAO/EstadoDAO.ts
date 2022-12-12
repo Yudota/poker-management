@@ -50,6 +50,7 @@ export default class EstadoDAO extends AbstractDAO {
       const result = await AbstractDAO.con.estados.findFirst({
         where: { uf: entidade.uf },
       })
+      console.log('result', result)
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
       console.log('deu merda:', error)
