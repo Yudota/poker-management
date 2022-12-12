@@ -5,25 +5,22 @@ import Result from "../utils/Result";
 import AbstractDAO from "./AbstractDAO";
 
 export default class CarteiraDAO extends AbstractDAO {
-  saldo: string;
 
-  constructor({ id, saldo }: Carteira) {
-    super(id)
-    this.saldo = saldo;
+  constructor() {
+    super()
 
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
     this.alterar = this.alterar.bind(this)
 
-    this.result = new Result('');
-    this.con = ConnectionFactory.criar()
   }
-  async criar(): Promise<any> {
+  async criar(carteira: Carteira): Promise<Result> {
+
     try {
       const result = await this.con.carteiras.create({
         data: {
-          saldo: this.saldo
+          saldo: carteira.saldo,
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result

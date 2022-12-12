@@ -5,27 +5,22 @@ import AbstractDAO from "./AbstractDAO";
 import Result from "../utils/Result";
 
 export default class TelefoneDAO extends AbstractDAO {
-  ddd: string;
-  numero: string;
-  constructor({ ddd, numero, id }: Telefone) {
-    super(id)
+  constructor() {
+    super()
 
-    this.ddd = ddd
-    this.numero = numero
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
     this.alterar = this.alterar.bind(this)
 
-    this.result = new Result('');
-    this.con = ConnectionFactory.criar()
   }
-  async criar(): Promise<any> {
+  async criar(entidade: Telefone): Promise<Result> {
+    const { ddd, numero } = entidade
     try {
       const result = await this.con.telefones.create({
         data: {
-          ddd: this.ddd,
-          numero: this.numero
+          ddd,
+          numero
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -34,7 +29,7 @@ export default class TelefoneDAO extends AbstractDAO {
       return this.result
     }
   }
-  async alterar(entidade: Telefone): Promise<any> {
+  async alterar(entidade: Telefone): Promise<Result> {
     const { ddd, numero } = entidade
     try {
       const result = await this.con.telefones.update({
@@ -50,7 +45,7 @@ export default class TelefoneDAO extends AbstractDAO {
       return this.result
     }
   }
-  async excluir(id: number): Promise<any> {
+  async excluir(id: number): Promise<Result> {
     try {
       const result = await this.con.telefones.delete({
         where: { id },
@@ -62,7 +57,7 @@ export default class TelefoneDAO extends AbstractDAO {
       return this.result
     }
   }
-  async consultar(entidade?: Partial<Telefone> | undefined): Promise<any> {
+  async consultar(entidade?: Partial<Telefone> | undefined): Promise<Result> {
     if (entidade) {
       try {
         const result = await this.con.telefones.findFirst({

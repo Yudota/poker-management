@@ -8,47 +8,49 @@ import Jogador from "../models/Jogador";
 import Endereco from "../models/Endereco";
 import Carteira from "../models/Carteira";
 import Telefone from "../models/Telefone";
+import CidadeDAO from "./CidadeDAO";
+import EstadoDAO from "./EstadoDAO";
+import Cidade from "../models/Cidade";
+import Estado from "../models/Estado";
+import CarteiraDAO from "./CarteiraDAO";
+import TelefoneDAO from "./TelefoneDAO";
 
 export default class JogadorDAO extends AbstractDAO {
 
-  apelido!: string
-  cpf!: string
-  dataNascimento!: string
-  email!: string
-  nome!: string
-  senha!: string
-  endereco!: Endereco
-  carteira!: Carteira
-  telefone!: Telefone
-  id!: number
   constructor() {
-    super(0)
+    super()
 
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
     this.alterar = this.alterar.bind(this)
 
-    this.result = new Result('');
-    this.con = ConnectionFactory.criar()
   }
   async criar(entidade: Jogador): Promise<Result> {
     try {
       console.log('buscando dados necessários para criar jogador');
 
-      const endDAO = new EnderecoDAO({} as Endereco)
+      const enderecoDAO = new EnderecoDAO()
+      const { id: fk_endereco } = (await enderecoDAO.consultar(entidade.endereco)).data as unknown as Endereco
+
+      const carteiraDAO = new CarteiraDAO()
+      const { id: fk_carteira } = (await carteiraDAO.criar(entidade.carteira)).data as unknown as Carteira
+
+      const telefoneDAO = new TelefoneDAO()
+      const { id: fk_telefone } = (await telefoneDAO.criar(entidade.telefone)).data as unknown as Telefone
 
       const result = await this.con.jogadores.create({
         data: {
-          nome: this.nome,
-          data_nascimento: this.dataNascimento,
-          apelido: this.apelido,
-          email: this.email,
-          cpf: this.cpf,
-          senha: this.senha,
-          fk_carteira: this.carteira.id as number,
-          fk_endereco: this.endereco.id as number,
-          fk_telefone: this.telefone.id as number,
+          nome: entidade.nome,
+          data_nascimento: entidade.dataNascimento,
+          apelido: entidade.apelido,
+          email: entidade.email,
+          cpf: entidade.cpf,
+          senha: entidade.senha,
+          fk_endereco: Number(fk_endereco),
+          fk_carteira: Number(fk_carteira),
+          fk_telefone: Number(fk_telefone)
+
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -129,3 +131,5 @@ export default class JogadorDAO extends AbstractDAO {
   }
 
 }
+
+const 

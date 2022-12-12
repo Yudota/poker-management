@@ -5,11 +5,8 @@ import Result from "../utils/Result";
 import AbstractDAO from "./AbstractDAO";
 
 export default class EstadoDAO extends AbstractDAO {
-  descricao: string;
-  constructor({ descricao, id }: Estado) {
-    super(id)
-
-    this.descricao = descricao
+  constructor() {
+    super()
 
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
@@ -28,7 +25,7 @@ export default class EstadoDAO extends AbstractDAO {
   async excluir(id: number): Promise<any> {
     return this.result = { mensagem: 'Erro. Não é possível excluir uma cidade.', data: {} } as unknown as Result
   }
-  async consultar(entidade?: Partial<Estado> | undefined): Promise<any> {
+  async consultar(entidade?: Estado | undefined): Promise<Result> {
     if (entidade) {
       try {
         const result = await this.con.estados.findFirst({
@@ -50,7 +47,7 @@ export default class EstadoDAO extends AbstractDAO {
       }
     }
   }
-  async consultaPorUF(entidade: Partial<Estado>): Promise<any> {
+  async consultaPorUF(entidade: Estado): Promise<Result> {
     try {
       const result = await this.con.estados.findFirst({
         where: { uf: entidade.uf },

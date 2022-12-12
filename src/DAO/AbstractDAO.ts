@@ -7,15 +7,14 @@ import EnderecoDAO from "./EnderecoDAO";
 import IDAO from "./IDAO";
 
 export default abstract class AbstractDAO implements IDAO {
-    con: PrismaClient;
+    static con: PrismaClient;
     result: Result
     id: number | undefined;
-    constructor(id: number | undefined) {
-        this.id = id;
+    constructor() {
         this.result = new Result('');
-        this.con = ConnectionFactory.criar()
+        AbstractDAO.con = ConnectionFactory.criar()
     }
-    abstract criar(entidade: AbsEntidadeDominio): Promise<any>
+    abstract criar(entidade: AbsEntidadeDominio): Promise<Result>
     abstract alterar(entidade: AbsEntidadeDominio): Promise<Result>
     abstract excluir(id: number): Promise<any>
     abstract consultar(entidade?: Partial<AbsEntidadeDominio>): Promise<Result>

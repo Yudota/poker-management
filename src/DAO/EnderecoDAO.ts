@@ -3,45 +3,34 @@ import Result from "../utils/Result";
 import AbstractDAO from "./AbstractDAO";
 import Estado from "../models/Estado";
 import Cidade from "../models/Cidade";
+import CidadeDAO from "./CidadeDAO";
+import { Code } from "typeorm";
 
 export default class EnderecoDAO extends AbstractDAO {
-  bairro: string;
-  cep: string;
-  cidade: Cidade
-  complemento: string;
-  estado: Estado
-  logradouro: string;
-  numeroEndereco: string;
-  tipoLogradouro: string;
 
-  constructor({ bairro, cep, cidade, complemento, estado, logradouro, numeroEndereco, tipoLogradouro, id }: Endereco) {
-    super(id)
+  constructor() {
+    super()
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
     this.alterar = this.alterar.bind(this)
 
-    this.bairro = bairro
-    this.cep = cep
-    this.cidade = cidade
-    this.complemento = complemento
-    this.estado = estado
-    this.logradouro = logradouro
-    this.numeroEndereco = numeroEndereco
-    this.tipoLogradouro = tipoLogradouro
   }
-  async criar(): Promise<any> {
+  async criar(endereco: Endereco): Promise<Result> {
+    const cid = new CidadeDAO()
+    const resultCid = (await cid.consultar(endereco.cidade)).data as unknown as Cidade
 
     try {
+      const fk_cidade = Number(resultCid.id)
       const result = await this.con.enderecos.create({
         data: {
-          numero: this.numeroEndereco,
-          bairro: this.bairro,
-          cep: this.cep,
-          complemento: this.complemento,
-          fk_cidade: this.cidade.id as number,
-          tipo_logradouro: this.tipoLogradouro,
-          logradouro: this.logradouro
+          numero: endereco.numeroEndereco,
+          bairro: endereco.bairro,
+          cep: endereco.cep,
+          complemento: endereco.complemento,
+          fk_cidade,
+          tipo_logradouro: endereco.tipoLogradouro,
+          logradouro: endereco.logradouro
 
         },
       })
@@ -51,21 +40,29 @@ export default class EnderecoDAO extends AbstractDAO {
       return this.result
     }
   }
-  async alterar(entidade: Endereco): Promise<any> {
-    // try {
-    //   const result = await this.con.carteiras.update({
-    //     where: { id: Number(entidade.id) },
-    //     data: {
-    //       saldo: entidade.saldo
-    //     }
-    //   })
-    //   return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
-    // } catch (error) {
-    //   console.log('deu merda:', error)
-    //   return this.result
-    // }
+  async alterar(endereco: Endereco): Promise<Result> {
+    const cid = new CidadeDAO()
+    const resultCid = (await cid.consultar(endereco.cidade)).data as unknown as Cidade
+    try {
+      const result = await this.con.enderecos.update({
+        where: { id: Number(endereco.id) },
+        data: {
+          bairro: endereco.bairro,
+          cep: endereco.cep,
+          complemento: endereco.complemento,
+          fk_cidade: resultCid.id,
+          tipo_logradouro: endereco.tipoLogradouro,
+          logradouro: endereco.logradouro
+
+        }
+      })
+      return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+    } catch (error) {
+      console.log('deu merda:', error)
+      return this.result
+    }
   }
-  async excluir(id: number): Promise<any> {
+  async excluir(id: number): Promise<Result> {
     try {
       const result = await this.con.carteiras.delete({
         where: { id },
@@ -77,7 +74,7 @@ export default class EnderecoDAO extends AbstractDAO {
       return this.result
     }
   }
-  async consultar(entidade?: Partial<Endereco> | undefined): Promise<any> {
+  async consultar(entidade?: Endereco): Promise<Result> {
     if (entidade) {
       try {
         const result = await this.con.carteiras.findFirst({
