@@ -4,8 +4,8 @@ export default class Telefone extends AbsEntidadeDominio {
   private _ddd: string;
   private _numero: string;
 
-  constructor(ddd: string, numero: string) {
-    super()
+  constructor(ddd: string, numero: string, id?: string) {
+    super(id)
     this._ddd = ddd;
     this._numero = numero;
   }

@@ -53,6 +53,16 @@ export default class JogadorDAO extends AbstractDAO {
     }
   }
   async alterar(entidade: Jogador): Promise<Result> {
+
+    const carteiraDAO = new CarteiraDAO()
+    const { id: newCarteiraId } = (await carteiraDAO.alterar(entidade.carteira)).data as unknown as Carteira
+
+    const telefoneDAO = new TelefoneDAO()
+    const { id: newTelefoneId } = (await telefoneDAO.alterar(entidade.telefone)).data as unknown as Telefone
+
+    const enderecoDAO = new EnderecoDAO()
+    const { id: newEnderecoId } = (await enderecoDAO.alterar(entidade.endereco)).data as unknown as Endereco
+
     const {
       id,
       apelido,
@@ -74,6 +84,9 @@ export default class JogadorDAO extends AbstractDAO {
         email,
         cpf,
         senha,
+        fk_carteira: newCarteiraId,
+        fk_telefone: newTelefoneId,
+        fk_endereco: newEnderecoId
       }
     })
     console.log(result)

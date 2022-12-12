@@ -3,8 +3,8 @@ import AbsEntidadeDominio from "./AbsEntidadeDominio";
 export default class Carteira extends AbsEntidadeDominio {
   private _saldo: string;
 
-  constructor(saldo: string) {
-    super()
+  constructor(saldo: string, id?: string) {
+    super(id)
     this._saldo = saldo;
   }
 
