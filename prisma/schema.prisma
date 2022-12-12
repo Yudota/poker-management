@@ -45,6 +45,7 @@ model estados {
   descricao   String    @db.VarChar(255)
   created_at  DateTime  @default(now()) @db.Timestamp(6)
   last_update DateTime  @default(now()) @db.Timestamp(6)
+  uf          String    @db.VarChar(2)
   cidades     cidades[]
 }
 
@@ -57,14 +58,14 @@ model jogadores {
   cpf             String    @unique(map: "u_jogadores_cpf") @db.VarChar(11)
   fk_carteira     Int
   fk_endereco     Int
-  fk_telefone     Int
   created_at      DateTime  @default(now()) @db.Timestamp(6)
   last_update     DateTime  @default(now()) @db.Timestamp(6)
   data_nascimento String?   @db.VarChar(255)
   is_active       Boolean?
-  carteiras       carteiras @relation(fields: [fk_carteira], references: [id], onDelete: Cascade, map: "fk_jogadores_carteiras", onUpdate: Cascade)
-  enderecos       enderecos @relation(fields: [fk_endereco], references: [id], onDelete: Cascade, map: "fk_jogadores_enderecos", onUpdate: Cascade)
-  telefones       telefones @relation(fields: [fk_telefone], references: [id], onDelete: Cascade, map: "fk_jogadores_telefones", onUpdate: Cascade)
+  fk_telefone     Int
+  carteiras       carteiras @relation(fields: [fk_carteira], references: [id], onDelete: Cascade, map: "fk_jogadores_carteiras")
+  enderecos       enderecos @relation(fields: [fk_endereco], references: [id], onDelete: Cascade, map: "fk_jogadores_enderecos")
+  telefones       telefones @relation(fields: [fk_telefone], references: [id], onDelete: Cascade, map: "fk_jogadores_telefones")
 }
 
 model telefones {
