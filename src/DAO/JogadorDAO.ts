@@ -1,17 +1,10 @@
-import ConnectionFactory from "./ConnectionFactory";
 import Result from "../utils/Result";
-
 import AbstractDAO from "./AbstractDAO";
 import EnderecoDAO from "./EnderecoDAO";
-
 import Jogador from "../models/Jogador";
 import Endereco from "../models/Endereco";
 import Carteira from "../models/Carteira";
 import Telefone from "../models/Telefone";
-import CidadeDAO from "./CidadeDAO";
-import EstadoDAO from "./EstadoDAO";
-import Cidade from "../models/Cidade";
-import Estado from "../models/Estado";
 import CarteiraDAO from "./CarteiraDAO";
 import TelefoneDAO from "./TelefoneDAO";
 
