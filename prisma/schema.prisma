@@ -45,33 +45,34 @@ model estados {
   descricao   String    @db.VarChar(255)
   created_at  DateTime  @default(now()) @db.Timestamp(6)
   last_update DateTime  @default(now()) @db.Timestamp(6)
+  uf          String    @db.VarChar(2)
   cidades     cidades[]
 }
 
 model jogadores {
-  id              Int         @id @default(autoincrement())
-  nome            String      @db.VarChar(255)
-  apelido         String      @unique(map: "u_jogadores_apelido") @db.VarChar(255)
-  email           String      @unique(map: "u_jogadores_email") @db.VarChar(255)
-  senha           String      @db.VarChar(255)
-  cpf             String      @unique(map: "u_jogadores_cpf") @db.VarChar(11)
+  id              Int       @id @default(autoincrement())
+  nome            String    @db.VarChar(255)
+  apelido         String    @unique(map: "u_jogadores_apelido") @db.VarChar(255)
+  email           String    @unique(map: "u_jogadores_email") @db.VarChar(255)
+  senha           String    @db.VarChar(255)
+  cpf             String    @unique(map: "u_jogadores_cpf") @db.VarChar(11)
   fk_carteira     Int
   fk_endereco     Int
-  created_at      DateTime    @default(now()) @db.Timestamp(6)
-  last_update     DateTime    @default(now()) @db.Timestamp(6)
-  data_nascimento String?     @db.VarChar(255)
+  created_at      DateTime  @default(now()) @db.Timestamp(6)
+  last_update     DateTime  @default(now()) @db.Timestamp(6)
+  data_nascimento String?   @db.VarChar(255)
   is_active       Boolean?
-  carteiras       carteiras   @relation(fields: [fk_carteira], references: [id], onDelete: Cascade, map: "fk_jogadores_carteiras")
-  enderecos       enderecos   @relation(fields: [fk_endereco], references: [id], onDelete: NoAction, map: "fk_jogadores_enderecos")
-  telefones       telefones[]
+  fk_telefone     Int
+  carteiras       carteiras @relation(fields: [fk_carteira], references: [id], onDelete: Cascade, map: "fk_jogadores_carteiras")
+  enderecos       enderecos @relation(fields: [fk_endereco], references: [id], onDelete: Cascade, map: "fk_jogadores_enderecos")
+  telefones       telefones @relation(fields: [fk_telefone], references: [id], onDelete: Cascade, map: "fk_jogadores_telefones")
 }
 
 model telefones {
-  id          Int       @id @default(autoincrement())
-  ddd         String    @db.VarChar(2)
-  numero      String    @db.VarChar(255)
-  fk_jogador  Int
-  created_at  DateTime  @default(now()) @db.Timestamp(6)
-  last_update DateTime  @default(now()) @db.Timestamp(6)
-  jogadores   jogadores @relation(fields: [fk_jogador], references: [id], onDelete: Cascade, map: "fk_telefones_jogadores")
+  id          Int         @id @default(autoincrement())
+  ddd         String      @db.VarChar(2)
+  numero      String      @db.VarChar(255)
+  created_at  DateTime    @default(now()) @db.Timestamp(6)
+  last_update DateTime    @default(now()) @db.Timestamp(6)
+  jogadores   jogadores[]
 }

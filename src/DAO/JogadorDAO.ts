@@ -1,149 +1,70 @@
-import ConnectionFactory from "./ConnectionFactory";
-import IDAO from "./IDAO";
-
-import Jogador from "../models/Jogador";
 import Result from "../utils/Result";
-import { PrismaClient } from "@prisma/client";
+import AbstractDAO from "./AbstractDAO";
+import EnderecoDAO from "./EnderecoDAO";
+import Jogador from "../models/Jogador";
+import Endereco from "../models/Endereco";
+import Carteira from "../models/Carteira";
+import Telefone from "../models/Telefone";
+import CarteiraDAO from "./CarteiraDAO";
+import TelefoneDAO from "./TelefoneDAO";
 
-export default class JogadorDAO implements IDAO {
-  con: PrismaClient;
-  result: Result
+export default class JogadorDAO extends AbstractDAO {
+
   constructor() {
+    super()
+
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
     this.alterar = this.alterar.bind(this)
 
-    this.result = new Result('');
-    this.con = ConnectionFactory.criar()
   }
   async criar(entidade: Jogador): Promise<Result> {
-    console.log('criando no DAO')
-    console.log('entidade:', entidade)
-    const {
-      apelido,
-      carteira,
-      cpf,
-      dataNascimento: data_nascimento,
-      email,
-      endereco,
-      nome,
-      senha,
-      telefone
-    } = entidade
-    console.log('teste destruct:', apelido);
-
     try {
-      console.log('entrou no try create')
-      const result = await this.con.jogadores.create({
-        data: {
-          nome,
-          data_nascimento,
-          apelido,
-          email,
-          cpf,
-          senha,
-          telefones: {
-            create: { ddd: telefone.ddd, numero: telefone.numero },
-          },
-          carteiras: {
-            create: { saldo: carteira.saldo },
-          },
-          enderecos: {
-            create: {
-              tipo_logradouro: endereco.tipoLogradouro,
-              logradouro: endereco.logradouro,
-              numero: endereco.numeroEndereco,
-              bairro: endereco.bairro,
-              cep: endereco.cep,
-              complemento: endereco.compĺemento,
-              cidades: {
-                create: {
-                  descricao: endereco.cidade.nomeCidade,
-                  estados: {
-                    create: {
-                      descricao: endereco.estado.descricao,
-                    }
-                  }
-                }
-              }
+      console.log('buscando dados necessários para criar jogador');
 
-            }
-          }
+      const enderecoDAO = new EnderecoDAO()
+      const { id: fk_endereco } = (await enderecoDAO.criar(entidade.endereco)).data as unknown as Endereco
+
+      const carteiraDAO = new CarteiraDAO()
+      const { id: fk_carteira } = (await carteiraDAO.criar(entidade.carteira)).data as unknown as Carteira
+
+      const telefoneDAO = new TelefoneDAO()
+      const { id: fk_telefone } = (await telefoneDAO.criar(entidade.telefone)).data as unknown as Telefone
+
+      const result = await AbstractDAO.con.jogadores.create({
+        data: {
+          nome: entidade.nome,
+          data_nascimento: entidade.dataNascimento,
+          apelido: entidade.apelido,
+          email: entidade.email,
+          cpf: entidade.cpf,
+          senha: entidade.senha,
+          fk_endereco: Number(fk_endereco),
+          fk_carteira: Number(fk_carteira),
+          fk_telefone: Number(fk_telefone)
+
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
-      // return this.result = { mensagem: 'mock', data: 'mock' } as unknown as Result
     } catch (error) {
       console.log('deu merda:', error)
       return this.result
     }
   }
   async alterar(entidade: Jogador): Promise<Result> {
-    console.log('criando no DAO')
-    console.log('entidade:', entidade)
     const {
       id,
       apelido,
-      carteira,
       cpf,
       dataNascimento,
       email,
-      endereco,
       nome,
       senha,
-      telefone
     } = entidade
-    const { bairro,
-      cep,
-      cidade,
-      compĺemento,
-      estado,
-      id: idEndereco,
-      logradouro,
-      numeroEndereco,
-      tipoLogradouro
-    } = endereco
-    const updatedCidade = await this.con.cidades.findUnique({ where: { id: Number(cidade.id) } })
-    const updatedEstado = await this.con.estados.findUnique({ where: { id: Number(estado.id) } })
-    if (updatedCidade && updatedEstado) {
+    super.id = id
 
-      const updatedEndereco = await this.con.enderecos.update({
-        where: { id: Number(idEndereco) },
-        data: {
-          tipo_logradouro: tipoLogradouro,
-          logradouro,
-          numero: numeroEndereco,
-          bairro,
-          cep,
-          cidades: {
-            update: {
-              descricao: updatedCidade.descricao,
-              estados: {
-                update: {
-                  descricao: updatedEstado.descricao,
-                }
-
-              },
-            }
-          }
-        }
-      });
-    }
-    const updatedCarteira = await this.con.carteiras.update({
-      where: { id: Number(carteira.id) },
-      data: {
-        saldo: carteira.saldo,
-      }
-    });
-    const updatedTelefone = await this.con.telefones.update({
-      where: { id: Number(telefone.id) },
-      data: {
-        ddd: telefone.ddd,
-        numero: telefone.numero,
-      }
-    });
-    const result = await this.con.jogadores.update({
+    const result = await AbstractDAO.con.jogadores.update({
       where: { id: Number(id) },
       data: {
         id: Number(id),
@@ -160,12 +81,13 @@ export default class JogadorDAO implements IDAO {
     return this.result
   }
   async excluir(id: number): Promise<any> {
+    super.id = id
     try {
-      const player = await this.con.jogadores.findUnique({
+      const player = await AbstractDAO.con.jogadores.findUnique({
         where: { id },
       })
       console.log('jogador encontrado:', player)
-      const resultadoBanco = await this.con.jogadores.delete({
+      const resultadoBanco = await AbstractDAO.con.jogadores.delete({
         where: { id },
       })
       console.log('jogador removido:', resultadoBanco)
@@ -178,9 +100,10 @@ export default class JogadorDAO implements IDAO {
 
   }
   async consultar(entidade?: Jogador): Promise<Result> {
+    super.id = entidade!.id
     if (entidade) {
       try {
-        const result = await this.con.jogadores.findUnique({
+        const result = await AbstractDAO.con.jogadores.findUnique({
           where: { id: entidade.id },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -191,7 +114,7 @@ export default class JogadorDAO implements IDAO {
     }
     else {
       try {
-        const result = await this.con.jogadores.findMany()
+        const result = await AbstractDAO.con.jogadores.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
         console.log('deu merda:', error)

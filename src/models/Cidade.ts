@@ -16,10 +16,10 @@ export default class Cidade extends AbsEntidadeDominio {
   set nomeCidade(nomeCidade: string) {
     this._nomeCidade = nomeCidade;
   }
-  get id(): string | undefined {
-    return super.id;
+  get estado(): Estado {
+    return this._est;
   }
-  set id(id: string | undefined) {
-    super.id = id;
+  set estado(estado: Estado) {
+    this._est = estado;
   }
 }

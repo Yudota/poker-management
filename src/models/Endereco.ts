@@ -19,9 +19,10 @@ export default class Endereco extends AbsEntidadeDominio {
     cep: string,
     complemento: string,
     cidade: Cidade,
-    estado: Estado
+    estado: Estado,
+    id: string
   ) {
-    super()
+    super(id)
     this._tipoLogradouro = tipoLogradouro
     this._logradouro = logradouro
     this._numeroEndereco = numeroEndereco
@@ -61,10 +62,10 @@ export default class Endereco extends AbsEntidadeDominio {
   set cep(val: string) {
     this._cep = val
   }
-  get compĺemento(): string {
+  get complemento(): string {
     return this._complemento
   }
-  set compĺemento(val: string) {
+  set complemento(val: string) {
     this._complemento = val
   }
   get cidade(): Cidade {
