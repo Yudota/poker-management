@@ -45,12 +45,7 @@ export default class JogadorDAO implements IDAO {
           senha,
           fk_carteira: carteira.id as number,
           fk_endereco: endereco.id as number,
-          telefones: {
-            create: {
-              ddd: telefone.ddd,
-              numero: telefone.numero
-            }
-          }
+          fk_telefone: telefone.id as number,
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result

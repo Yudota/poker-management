@@ -61,10 +61,10 @@ export default class Endereco extends AbsEntidadeDominio {
   set cep(val: string) {
     this._cep = val
   }
-  get compĺemento(): string {
+  get complemento(): string {
     return this._complemento
   }
-  set compĺemento(val: string) {
+  set complemento(val: string) {
     this._complemento = val
   }
   get cidade(): Cidade {
