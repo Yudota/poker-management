@@ -5,12 +5,9 @@ import Result from "../utils/Result";
 import AbstractDAO from "./AbstractDAO";
 
 export default class EstadoDAO extends AbstractDAO {
-  descricao: string;
-  constructor({ descricao, id }: Estado) {
-    super(id)
-
-    this.descricao = descricao
-
+  descricao!: string;
+  constructor() {
+    super()
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
@@ -50,11 +47,13 @@ export default class EstadoDAO extends AbstractDAO {
       }
     }
   }
-  async consultaPorUF(entidade: Partial<Estado>): Promise<any> {
+  async consultaPorUF(entidade:Estado): Promise<any> {
     try {
       const result = await this.con.estados.findFirst({
-        where: { uf: entidade.uf },
+        where: {uf: entidade.uf},
+        
       })
+      console.log('result', result)
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
       console.log('deu merda:', error)

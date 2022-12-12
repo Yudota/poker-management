@@ -15,7 +15,7 @@ export default class EnderecoDAO extends AbstractDAO {
   tipoLogradouro: string;
 
   constructor({ bairro, cep, cidade, complemento, estado, logradouro, numeroEndereco, tipoLogradouro, id }: Endereco) {
-    super(id)
+    super()
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)

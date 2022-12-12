@@ -10,8 +10,7 @@ export default abstract class AbstractDAO implements IDAO {
     con: PrismaClient;
     result: Result
     id: number | undefined;
-    constructor(id: number | undefined) {
-        this.id = id;
+    constructor() {
         this.result = new Result('');
         this.con = ConnectionFactory.criar()
     }
