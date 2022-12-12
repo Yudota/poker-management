@@ -43,106 +43,33 @@ export default class JogadorDAO implements IDAO {
           email,
           cpf,
           senha,
+          fk_carteira: carteira.id as number,
+          fk_endereco: endereco.id as number,
           telefones: {
-            create: { ddd: telefone.ddd, numero: telefone.numero },
-          },
-          carteiras: {
-            create: { saldo: carteira.saldo },
-          },
-          enderecos: {
             create: {
-              tipo_logradouro: endereco.tipoLogradouro,
-              logradouro: endereco.logradouro,
-              numero: endereco.numeroEndereco,
-              bairro: endereco.bairro,
-              cep: endereco.cep,
-              complemento: endereco.compĺemento,
-              cidades: {
-                create: {
-                  descricao: endereco.cidade.nomeCidade,
-                  estados: {
-                    create: {
-                      descricao: endereco.estado.descricao,
-                    }
-                  }
-                }
-              }
-
+              ddd: telefone.ddd,
+              numero: telefone.numero
             }
           }
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
-      // return this.result = { mensagem: 'mock', data: 'mock' } as unknown as Result
     } catch (error) {
       console.log('deu merda:', error)
       return this.result
     }
   }
   async alterar(entidade: Jogador): Promise<Result> {
-    console.log('criando no DAO')
-    console.log('entidade:', entidade)
     const {
       id,
       apelido,
-      carteira,
       cpf,
       dataNascimento,
       email,
-      endereco,
       nome,
       senha,
-      telefone
     } = entidade
-    const { bairro,
-      cep,
-      cidade,
-      compĺemento,
-      estado,
-      id: idEndereco,
-      logradouro,
-      numeroEndereco,
-      tipoLogradouro
-    } = endereco
-    const updatedCidade = await this.con.cidades.findUnique({ where: { id: Number(cidade.id) } })
-    const updatedEstado = await this.con.estados.findUnique({ where: { id: Number(estado.id) } })
-    if (updatedCidade && updatedEstado) {
 
-      const updatedEndereco = await this.con.enderecos.update({
-        where: { id: Number(idEndereco) },
-        data: {
-          tipo_logradouro: tipoLogradouro,
-          logradouro,
-          numero: numeroEndereco,
-          bairro,
-          cep,
-          cidades: {
-            update: {
-              descricao: updatedCidade.descricao,
-              estados: {
-                update: {
-                  descricao: updatedEstado.descricao,
-                }
-
-              },
-            }
-          }
-        }
-      });
-    }
-    const updatedCarteira = await this.con.carteiras.update({
-      where: { id: Number(carteira.id) },
-      data: {
-        saldo: carteira.saldo,
-      }
-    });
-    const updatedTelefone = await this.con.telefones.update({
-      where: { id: Number(telefone.id) },
-      data: {
-        ddd: telefone.ddd,
-        numero: telefone.numero,
-      }
-    });
     const result = await this.con.jogadores.update({
       where: { id: Number(id) },
       data: {
