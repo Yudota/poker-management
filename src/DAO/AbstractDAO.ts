@@ -15,9 +15,9 @@ export default abstract class AbstractDAO implements IDAO {
         this.result = new Result('');
         this.con = ConnectionFactory.criar()
     }
-    abstract criar(): Promise<any>
+    abstract criar(entidade: AbsEntidadeDominio): Promise<any>
     abstract alterar(entidade: AbsEntidadeDominio): Promise<Result>
     abstract excluir(id: number): Promise<any>
-    abstract consultar(entidade?: AbsEntidadeDominio): Promise<Result>
+    abstract consultar(entidade?: Partial<AbsEntidadeDominio>): Promise<Result>
 
 }

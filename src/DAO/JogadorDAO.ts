@@ -11,27 +11,18 @@ import Telefone from "../models/Telefone";
 
 export default class JogadorDAO extends AbstractDAO {
 
-  apelido: string
-  cpf: string
-  dataNascimento: string
-  email: string
-  nome: string
-  senha: string
-  endereco: Endereco
-  carteira: Carteira
-  telefone: Telefone
-  constructor({ id, apelido, carteira, cpf, dataNascimento, email, endereco, nome, senha, telefone }: Jogador) {
-    super(id)
-
-    this.apelido = apelido
-    this.cpf = cpf
-    this.dataNascimento = dataNascimento
-    this.email = email
-    this.nome = nome
-    this.senha = senha
-    this.endereco = endereco
-    this.carteira = carteira
-    this.telefone = telefone
+  apelido!: string
+  cpf!: string
+  dataNascimento!: string
+  email!: string
+  nome!: string
+  senha!: string
+  endereco!: Endereco
+  carteira!: Carteira
+  telefone!: Telefone
+  id!: number
+  constructor() {
+    super(0)
 
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
@@ -41,7 +32,7 @@ export default class JogadorDAO extends AbstractDAO {
     this.result = new Result('');
     this.con = ConnectionFactory.criar()
   }
-  async criar(): Promise<Result> {
+  async criar(entidade: Jogador): Promise<Result> {
     try {
       console.log('buscando dados necessários para criar jogador');
 
@@ -76,6 +67,7 @@ export default class JogadorDAO extends AbstractDAO {
       nome,
       senha,
     } = entidade
+    super.id = id
 
     const result = await this.con.jogadores.update({
       where: { id: Number(id) },
@@ -94,6 +86,7 @@ export default class JogadorDAO extends AbstractDAO {
     return this.result
   }
   async excluir(id: number): Promise<any> {
+    super.id = id
     try {
       const player = await this.con.jogadores.findUnique({
         where: { id },
@@ -112,6 +105,7 @@ export default class JogadorDAO extends AbstractDAO {
 
   }
   async consultar(entidade?: Jogador): Promise<Result> {
+    super.id = entidade!.id
     if (entidade) {
       try {
         const result = await this.con.jogadores.findUnique({
