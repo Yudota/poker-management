@@ -13,7 +13,7 @@ export default class ValidarCpf implements IStrategy{
             result.erro = 1
          return Promise.resolve(result)
         }
-        result.mensagem = "sucesso"
+        result.mensagem = "cpf validado com sucesso"
         return Promise.resolve(result)
     }
 }

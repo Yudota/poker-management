@@ -337,7 +337,7 @@ class GeraRegistro {
 
                 await this.con.cidades.create({
                     data: {
-                        descricao: estado.nome,
+                        nomeCidade: estado.nome,
                         fk_estado: idEstado,
 
                     },
