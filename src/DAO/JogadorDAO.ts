@@ -1,14 +1,38 @@
 import ConnectionFactory from "./ConnectionFactory";
-import IDAO from "./IDAO";
+import Result from "../utils/Result";
+
+import AbstractDAO from "./AbstractDAO";
+import EnderecoDAO from "./EnderecoDAO";
 
 import Jogador from "../models/Jogador";
-import Result from "../utils/Result";
-import { PrismaClient } from "@prisma/client";
+import Endereco from "../models/Endereco";
+import Carteira from "../models/Carteira";
+import Telefone from "../models/Telefone";
 
-export default class JogadorDAO implements IDAO {
-  con: PrismaClient;
-  result: Result
-  constructor() {
+export default class JogadorDAO extends AbstractDAO {
+
+  apelido: string
+  cpf: string
+  dataNascimento: string
+  email: string
+  nome: string
+  senha: string
+  endereco: Endereco
+  carteira: Carteira
+  telefone: Telefone
+  constructor({ id, apelido, carteira, cpf, dataNascimento, email, endereco, nome, senha, telefone }: Jogador) {
+    super(id)
+
+    this.apelido = apelido
+    this.cpf = cpf
+    this.dataNascimento = dataNascimento
+    this.email = email
+    this.nome = nome
+    this.senha = senha
+    this.endereco = endereco
+    this.carteira = carteira
+    this.telefone = telefone
+
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
@@ -17,35 +41,23 @@ export default class JogadorDAO implements IDAO {
     this.result = new Result('');
     this.con = ConnectionFactory.criar()
   }
-  async criar(entidade: Jogador): Promise<Result> {
-    console.log('criando no DAO')
-    console.log('entidade:', entidade)
-    const {
-      apelido,
-      carteira,
-      cpf,
-      dataNascimento: data_nascimento,
-      email,
-      endereco,
-      nome,
-      senha,
-      telefone
-    } = entidade
-    console.log('teste destruct:', apelido);
-
+  async criar(): Promise<Result> {
     try {
-      console.log('entrou no try create')
+      console.log('buscando dados necessários para criar jogador');
+
+      const endDAO = new EnderecoDAO({} as Endereco)
+
       const result = await this.con.jogadores.create({
         data: {
-          nome,
-          data_nascimento,
-          apelido,
-          email,
-          cpf,
-          senha,
-          fk_carteira: carteira.id as number,
-          fk_endereco: endereco.id as number,
-          fk_telefone: telefone.id as number,
+          nome: this.nome,
+          data_nascimento: this.dataNascimento,
+          apelido: this.apelido,
+          email: this.email,
+          cpf: this.cpf,
+          senha: this.senha,
+          fk_carteira: this.carteira.id as number,
+          fk_endereco: this.endereco.id as number,
+          fk_telefone: this.telefone.id as number,
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result

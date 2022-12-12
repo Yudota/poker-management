@@ -4,11 +4,13 @@ import IDAO from "./IDAO";
 import Cidade from "../models/Cidade";
 import Result from "../utils/Result";
 import { PrismaClient } from "@prisma/client";
+import AbstractDAO from "./AbstractDAO";
 
-export default class CidadeDAO implements IDAO {
+export default class CidadeDAO extends AbstractDAO {
     con: PrismaClient;
     result: Result;
-    constructor() {
+    constructor({ estado, nomeCidade, id }: Cidade) {
+        super(id)
         this.criar = this.criar.bind(this)
         this.consultar = this.consultar.bind(this)
         this.excluir = this.excluir.bind(this)
@@ -17,7 +19,7 @@ export default class CidadeDAO implements IDAO {
         this.result = new Result('');
         this.con = ConnectionFactory.criar()
     }
-    async criar(entidade: Cidade): Promise<any> {
+    async criar(): Promise<any> {
         return this.result = { mensagem: 'Erro. Não é possível criar uma nova cidade.', data: {} } as unknown as Result
     }
     async alterar(entidade: Cidade): Promise<any> {
@@ -49,5 +51,3 @@ export default class CidadeDAO implements IDAO {
         }
     }
 }
-
-const teste = new CidadeDAO()

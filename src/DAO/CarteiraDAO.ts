@@ -1,14 +1,16 @@
 import ConnectionFactory from "./ConnectionFactory";
-import IDAO from "./IDAO";
 
 import Carteira from "../models/Carteira";
 import Result from "../utils/Result";
-import { PrismaClient } from "@prisma/client";
+import AbstractDAO from "./AbstractDAO";
 
-export default class CarteiraDAO implements IDAO {
-  con: PrismaClient;
-  result: Result;
-  constructor() {
+export default class CarteiraDAO extends AbstractDAO {
+  saldo: string;
+
+  constructor({ id, saldo }: Carteira) {
+    super(id)
+    this.saldo = saldo;
+
     this.criar = this.criar.bind(this)
     this.consultar = this.consultar.bind(this)
     this.excluir = this.excluir.bind(this)
@@ -17,11 +19,11 @@ export default class CarteiraDAO implements IDAO {
     this.result = new Result('');
     this.con = ConnectionFactory.criar()
   }
-  async criar(entidade: Carteira): Promise<any> {
+  async criar(): Promise<any> {
     try {
       const result = await this.con.carteiras.create({
         data: {
-          saldo: entidade.saldo
+          saldo: this.saldo
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
@@ -79,5 +81,3 @@ export default class CarteiraDAO implements IDAO {
     }
   }
 }
-
-const teste = new CarteiraDAO()
