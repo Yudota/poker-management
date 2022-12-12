@@ -78,8 +78,14 @@ export default class Facade implements IFacade {
       }
     }
     if (!result.erro) {
-      result = await dao.consultar(entidade)
+      if (entidade.id) {
+        result = await dao.consultar(entidade)
+      }
+      else {
+        result = await dao.consultar()
+      }
     }
+
     console.log('resultado:', result)
     return result
 

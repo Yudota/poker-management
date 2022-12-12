@@ -3,8 +3,7 @@ import IDAO from "./IDAO";
 
 import Jogador from "../models/Jogador";
 import Result from "../utils/Result";
-import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
-import { jogadores, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 export default class JogadorDAO implements IDAO {
   con: PrismaClient;
@@ -25,7 +24,7 @@ export default class JogadorDAO implements IDAO {
       apelido,
       carteira,
       cpf,
-      dataNascimento,
+      dataNascimento: data_nascimento,
       email,
       endereco,
       nome,
@@ -39,7 +38,7 @@ export default class JogadorDAO implements IDAO {
       const result = await this.con.jogadores.create({
         data: {
           nome,
-          dataNascimento,
+          data_nascimento,
           apelido,
           email,
           cpf,
@@ -52,7 +51,8 @@ export default class JogadorDAO implements IDAO {
           },
           enderecos: {
             create: {
-              tipologradouro: endereco.tipoLogradouro,
+              tipo_logradouro: endereco.tipoLogradouro,
+              logradouro: endereco.logradouro,
               numero: endereco.numeroEndereco,
               bairro: endereco.bairro,
               cep: endereco.cep,
@@ -94,46 +94,69 @@ export default class JogadorDAO implements IDAO {
       senha,
       telefone
     } = entidade
-    // const result = await this.con.jogadores.update({
-    //   where: { id },
-    //   data: {
-    //     id,
-    //     nome,
-    //     dataNascimento,
-    //     apelido,
-    //     email,
-    //     cpf,
-    //     senha,
-    //     telefones: {
-    //       create: { ddd: telefone.ddd, numero: telefone.numero },
-    //     },
-    //     carteiras: {
-    //       update: { saldo: carteira.saldo },
-    //     },
-    //     enderecos: {
-    //       update: {
-    //         tipologradouro: endereco.tipoLogradouro,
-    //         numero: endereco.numeroEndereco,
-    //         bairro: endereco.bairro,
-    //         cep: endereco.cep,
-    //         complemento: endereco.compĺemento,
-    //         cidades: {
-    //           update: {
-    //             descricao: endereco.cidade.nomeCidade,
-    //             estados: {
-    //               update: {
-    //                 descricao: endereco.estado.descricao,
-    //               }
-    //             }
-    //           }
-    //         }
+    const { bairro,
+      cep,
+      cidade,
+      compĺemento,
+      estado,
+      id: idEndereco,
+      logradouro,
+      numeroEndereco,
+      tipoLogradouro
+    } = endereco
+    const updatedCidade = await this.con.cidades.findUnique({ where: { id: Number(cidade.id) } })
+    const updatedEstado = await this.con.estados.findUnique({ where: { id: Number(estado.id) } })
+    if (updatedCidade && updatedEstado) {
 
-    //       }
-    //     }
-    //   },
-    // })
-    // console.log(result)
-    // this.result.data = JSON.stringify(result)
+      const updatedEndereco = await this.con.enderecos.update({
+        where: { id: Number(idEndereco) },
+        data: {
+          tipo_logradouro: tipoLogradouro,
+          logradouro,
+          numero: numeroEndereco,
+          bairro,
+          cep,
+          cidades: {
+            update: {
+              descricao: updatedCidade.descricao,
+              estados: {
+                update: {
+                  descricao: updatedEstado.descricao,
+                }
+
+              },
+            }
+          }
+        }
+      });
+    }
+    const updatedCarteira = await this.con.carteiras.update({
+      where: { id: Number(carteira.id) },
+      data: {
+        saldo: carteira.saldo,
+      }
+    });
+    const updatedTelefone = await this.con.telefones.update({
+      where: { id: Number(telefone.id) },
+      data: {
+        ddd: telefone.ddd,
+        numero: telefone.numero,
+      }
+    });
+    const result = await this.con.jogadores.update({
+      where: { id: Number(id) },
+      data: {
+        id: Number(id),
+        nome,
+        data_nascimento: dataNascimento,
+        apelido,
+        email,
+        cpf,
+        senha,
+      }
+    })
+    console.log(result)
+    this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     return this.result
   }
   async excluir(id: number): Promise<any> {
@@ -154,17 +177,26 @@ export default class JogadorDAO implements IDAO {
     return this.result
 
   }
-  async consultar(entidade: Jogador): Promise<Result> {
-    console.log('consultando  no DAO')
-    console.log('entidade:', entidade)
-    try {
-
-      const result = await this.con.jogadores.findMany()
-      return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
-      // return this.result = { mensagem: 'mock', data: 'mock' } as unknown as Result
-    } catch (error) {
-      console.log('deu merda:', error)
-      return this.result
+  async consultar(entidade?: Jogador): Promise<Result> {
+    if (entidade) {
+      try {
+        const result = await this.con.jogadores.findUnique({
+          where: { id: entidade.id },
+        })
+        return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+      } catch (error) {
+        console.log('deu merda:', error)
+        return this.result
+      }
+    }
+    else {
+      try {
+        const result = await this.con.jogadores.findMany()
+        return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+      } catch (error) {
+        console.log('deu merda:', error)
+        return this.result
+      }
     }
   }
 
