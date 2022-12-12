@@ -50,4 +50,16 @@ export default class EstadoDAO extends AbstractDAO {
       }
     }
   }
+  async consultaPorUF(entidade: Partial<Estado>): Promise<any> {
+    try {
+      const result = await this.con.estados.findFirst({
+        where: { uf: entidade.uf },
+      })
+      return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+    } catch (error) {
+      console.log('deu merda:', error)
+      return this.result
+    }
+
+  }
 }
