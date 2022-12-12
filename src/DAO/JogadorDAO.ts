@@ -31,7 +31,7 @@ export default class JogadorDAO extends AbstractDAO {
       console.log('buscando dados necessários para criar jogador');
 
       const enderecoDAO = new EnderecoDAO()
-      const { id: fk_endereco } = (await enderecoDAO.consultar(entidade.endereco)).data as unknown as Endereco
+      const { id: fk_endereco } = (await enderecoDAO.criar(entidade.endereco)).data as unknown as Endereco
 
       const carteiraDAO = new CarteiraDAO()
       const { id: fk_carteira } = (await carteiraDAO.criar(entidade.carteira)).data as unknown as Carteira
