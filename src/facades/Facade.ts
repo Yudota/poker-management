@@ -89,7 +89,8 @@ export default class Facade implements IFacade {
     console.log(entidade, TYPE_COMMAND.DELETE);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
-    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+
+    const regras = this.regras[className][TYPE_COMMAND.DELETE];
     let result: Result = new Result('');
     let response
     for (const estrategia of regras) {
@@ -111,7 +112,7 @@ export default class Facade implements IFacade {
     console.log(entidade, TYPE_COMMAND.UPDATE);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
-    const regras = this.regras[className][TYPE_COMMAND.CREATE];
+    const regras = this.regras[className][TYPE_COMMAND.READ];
     let result: Result = new Result('');
 
     for (const estrategia of regras) {
