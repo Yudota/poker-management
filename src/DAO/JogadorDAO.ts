@@ -108,8 +108,8 @@ export default class JogadorDAO extends AbstractDAO {
     return this.result
   }
   async consultar(entidade?: Jogador): Promise<Result> {
-    super.id = entidade!.id
     if (entidade) {
+      super.id = entidade.id
       try {
         const result = await AbstractDAO.getPrismaClient().jogadores.findUnique({
           where: { id: entidade.id },
@@ -121,6 +121,8 @@ export default class JogadorDAO extends AbstractDAO {
       }
     }
     else {
+
+      console.log('passou aqui');
       try {
         const result = await AbstractDAO.getPrismaClient().jogadores.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
