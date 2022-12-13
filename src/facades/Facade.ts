@@ -1,10 +1,7 @@
-
 import { TYPE_COMMAND } from "../commands/types/typeCommand";
 import AbstractDAO from "../DAO/AbstractDAO";
-import IDAO from "../DAO/IDAO";
 import JogadorDAO from "../DAO/JogadorDAO";
 import AbsEntidadeDominio from "../models/AbsEntidadeDominio";
-import Jogador from "../models/Jogador";
 import IStrategy from "../strategy/IStrategy";
 import Result from "../utils/Result";
 import IFacade from "./IFacade";
@@ -47,7 +44,7 @@ export default class Facade implements IFacade {
 
     for (const estrategia of regras) {
       const { mensagem, erro, data } = await estrategia.processar(entidade);
-      result.mensagem += mensagem + '\n';
+      result.mensagem += mensagem + '/n';
       result.erro += erro;
       result.data.push(...data);
       if (result.erro) {
@@ -57,7 +54,6 @@ export default class Facade implements IFacade {
     if (!result.erro) {
       result = await dao.criar(entidade)
     }
-    console.log('resultado:', result)
     return result
 
 
@@ -86,8 +82,6 @@ export default class Facade implements IFacade {
         result = await dao.consultar()
       }
     }
-
-    console.log('resultado:', result)
     return result
 
   }
@@ -110,7 +104,6 @@ export default class Facade implements IFacade {
     if (!result.erro) {
       response = await dao.excluir(Number(entidade.id))
     }
-    console.log('resultado:', response)
     return response
 
   }
@@ -118,7 +111,6 @@ export default class Facade implements IFacade {
     console.log(entidade, TYPE_COMMAND.UPDATE);
     const className = entidade.constructor.name as TYPE_MODEL;
     const dao = this.daos[className];
-    console.log(`DAO: ${JSON.stringify(dao, null, 2)}`);
     const regras = this.regras[className][TYPE_COMMAND.CREATE];
     let result: Result = new Result('');
 
@@ -134,7 +126,6 @@ export default class Facade implements IFacade {
     if (!result.erro) {
       result = await dao.alterar(entidade)
     }
-    console.log('resultado:', result)
     return result
 
   }

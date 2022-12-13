@@ -17,7 +17,7 @@ export default class TelefoneDAO extends AbstractDAO {
   async criar(entidade: Telefone): Promise<Result> {
     const { ddd, numero } = entidade
     try {
-      const result = await AbstractDAO.con.telefones.create({
+      const result = await AbstractDAO.getPrismaClient().telefones.create({
         data: {
           ddd,
           numero
@@ -25,14 +25,14 @@ export default class TelefoneDAO extends AbstractDAO {
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
   async alterar(entidade: Telefone): Promise<Result> {
     const { ddd, numero } = entidade
     try {
-      const result = await AbstractDAO.con.telefones.update({
+      const result = await AbstractDAO.getPrismaClient().telefones.update({
         where: { id: Number(entidade.id) },
         data: {
           ddd,
@@ -41,40 +41,40 @@ export default class TelefoneDAO extends AbstractDAO {
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
   async excluir(id: number): Promise<Result> {
     try {
-      const result = await AbstractDAO.con.telefones.delete({
+      const result = await AbstractDAO.getPrismaClient().telefones.delete({
         where: { id },
 
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
   async consultar(entidade?: Partial<Telefone> | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await AbstractDAO.con.telefones.findFirst({
+        const result = await AbstractDAO.getPrismaClient().telefones.findFirst({
           where: { id: Number(entidade.id) },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
     else {
       try {
-        const result = await AbstractDAO.con.telefones.findMany()
+        const result = await AbstractDAO.getPrismaClient().telefones.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }

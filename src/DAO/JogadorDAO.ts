@@ -21,7 +21,6 @@ export default class JogadorDAO extends AbstractDAO {
   }
   async criar(entidade: Jogador): Promise<Result> {
     try {
-      console.log('buscando dados necessários para criar jogador');
 
       const enderecoDAO = new EnderecoDAO()
       const { id: fk_endereco } = (await enderecoDAO.criar(entidade.endereco)).data as unknown as Endereco
@@ -32,7 +31,7 @@ export default class JogadorDAO extends AbstractDAO {
       const telefoneDAO = new TelefoneDAO()
       const { id: fk_telefone } = (await telefoneDAO.criar(entidade.telefone)).data as unknown as Telefone
 
-      const result = await AbstractDAO.con.jogadores.create({
+      const result = await AbstractDAO.getPrismaClient().jogadores.create({
         data: {
           nome: entidade.nome,
           data_nascimento: entidade.dataNascimento,
@@ -48,7 +47,7 @@ export default class JogadorDAO extends AbstractDAO {
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
@@ -74,7 +73,7 @@ export default class JogadorDAO extends AbstractDAO {
     } = entidade
     super.id = id
 
-    const result = await AbstractDAO.con.jogadores.update({
+    const result = await AbstractDAO.getPrismaClient().jogadores.update({
       where: { id: Number(id) },
       data: {
         id: Number(id),
@@ -96,44 +95,39 @@ export default class JogadorDAO extends AbstractDAO {
   async excluir(id: number): Promise<any> {
     super.id = id
     try {
-      const player = await AbstractDAO.con.jogadores.findUnique({
+      const player = await AbstractDAO.getPrismaClient().jogadores.findUnique({
         where: { id },
       })
-      console.log('jogador encontrado:', player)
-      const resultadoBanco = await AbstractDAO.con.jogadores.delete({
+      const resultadoBanco = await AbstractDAO.getPrismaClient().jogadores.delete({
         where: { id },
       })
-      console.log('jogador removido:', resultadoBanco)
-
     } catch (error) {
       console.log(error)
       return this.result.data
     }
     return this.result
-
   }
   async consultar(entidade?: Jogador): Promise<Result> {
     super.id = entidade!.id
     if (entidade) {
       try {
-        const result = await AbstractDAO.con.jogadores.findUnique({
+        const result = await AbstractDAO.getPrismaClient().jogadores.findUnique({
           where: { id: entidade.id },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
     else {
       try {
-        const result = await AbstractDAO.con.jogadores.findMany()
+        const result = await AbstractDAO.getPrismaClient().jogadores.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
   }
-
 }
