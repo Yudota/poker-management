@@ -3,15 +3,15 @@ import Result from "../utils/Result";
 import AbstractDAO from "./AbstractDAO";
 
 export default class CidadeDAO extends AbstractDAO {
-    constructor() {
-        super()
-        this.criar = this.criar.bind(this)
-        this.consultar = this.consultar.bind(this)
-        this.excluir = this.excluir.bind(this)
-        this.alterar = this.alterar.bind(this)
+  constructor() {
+    super()
+    this.criar = this.criar.bind(this)
+    this.consultar = this.consultar.bind(this)
+    this.excluir = this.excluir.bind(this)
+    this.alterar = this.alterar.bind(this)
 
   }
-  async criar(): Promise<any> {
+  async criar(): Promise<Result> {
     return this.result = { mensagem: 'Erro. Não é possível criar uma nova cidade.', data: {} } as unknown as Result
   }
   async alterar(entidade: Cidade): Promise<any> {
@@ -23,36 +23,35 @@ export default class CidadeDAO extends AbstractDAO {
   async consultar(entidade?: Cidade | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await AbstractDAO.con.cidades.findFirst({
-          where: { descricao: entidade.nomeCidade },
+        const result = await AbstractDAO.getPrismaClient().cidades.findFirst({
+          where: { nomeCidade: entidade.nomeCidade },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
     else {
       try {
-        const result = await AbstractDAO.con.cidades.findMany()
+        const result = await AbstractDAO.getPrismaClient().cidades.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
   }
-    async consultarPorNome(entidade:Cidade): Promise<any> {
-        console.log("cidade enviada ",entidade.nomeCidade);
-        
-            try {
-                const result = await AbstractDAO.con.cidades.findFirst({
-                    where: { descricao: entidade.nomeCidade },
-                })
-                return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
-            } catch (error) {
-                console.log('deu merda:', error)
-                return this.result
-            }
-        }
+  async consultarPorNome(entidade: Cidade): Promise<any> {
+
+    try {
+      const result = await AbstractDAO.getPrismaClient().cidades.findFirst({
+        where: { nomeCidade: entidade.nomeCidade },
+      })
+      return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
+    } catch (error) {
+      console.log('ERRO::', error)
+      return this.result
     }
+  }
+}

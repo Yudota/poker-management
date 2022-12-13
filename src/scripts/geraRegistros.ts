@@ -318,7 +318,7 @@ class GeraRegistro {
         try {
             for (const estado of arr) {
 
-                await this.con.estados.create({
+                await this.getPrismaClient().estados.create({
                     data: {
                         descricao: estado.nome,
                         uf: estado.sigla
@@ -327,7 +327,7 @@ class GeraRegistro {
             }
 
         } catch (error) {
-            console.log('deu merda:', error)
+            console.log('ERRO::', error)
         }
     }
     async gerarCidades(arr: Array<any>, idEstado: number) {
@@ -335,9 +335,9 @@ class GeraRegistro {
         try {
             for (const estado of arr) {
 
-                await this.con.cidades.create({
+                await this.getPrismaClient().cidades.create({
                     data: {
-                        descricao: estado.nome,
+                        nomeCidade: estado.nome,
                         fk_estado: idEstado,
 
                     },
@@ -345,37 +345,38 @@ class GeraRegistro {
             }
 
         } catch (error) {
-            console.log('deu merda:', error)
+            console.log('ERRO::', error)
         }
     }
 }
 
 const gr = new GeraRegistro()
-// gr.gerarEstados(allStates)
-gr.gerarCidades(RO, estados.RO)
-gr.gerarCidades(AC, estados.AC)
-gr.gerarCidades(AM, estados.AM)
-gr.gerarCidades(RR, estados.RR)
-gr.gerarCidades(PA, estados.PA)
-gr.gerarCidades(AP, estados.AP)
-gr.gerarCidades(TO, estados.TO)
-gr.gerarCidades(MA, estados.MA)
-gr.gerarCidades(PI, estados.PI)
-gr.gerarCidades(CE, estados.CE)
-gr.gerarCidades(RN, estados.RN)
-gr.gerarCidades(PB, estados.PB)
-gr.gerarCidades(PE, estados.PE)
-gr.gerarCidades(AL, estados.AL)
-gr.gerarCidades(SE, estados.SE)
-gr.gerarCidades(BA, estados.BA)
-gr.gerarCidades(MG, estados.MG)
-gr.gerarCidades(ES, estados.ES)
-gr.gerarCidades(RJ, estados.RJ)
-gr.gerarCidades(SP, estados.SP)
-gr.gerarCidades(PR, estados.PR)
-gr.gerarCidades(SC, estados.SC)
-gr.gerarCidades(RS, estados.RS)
-gr.gerarCidades(MS, estados.MS)
-gr.gerarCidades(MT, estados.MT)
-gr.gerarCidades(GO, estados.GO)
-gr.gerarCidades(DF, estados.DF)
+gr.gerarEstados(allStates).then(_ => {
+    gr.gerarCidades(RO, estados.RO)
+    gr.gerarCidades(AC, estados.AC)
+    gr.gerarCidades(AM, estados.AM)
+    gr.gerarCidades(RR, estados.RR)
+    gr.gerarCidades(PA, estados.PA)
+    gr.gerarCidades(AP, estados.AP)
+    gr.gerarCidades(TO, estados.TO)
+    gr.gerarCidades(MA, estados.MA)
+    gr.gerarCidades(PI, estados.PI)
+    gr.gerarCidades(CE, estados.CE)
+    gr.gerarCidades(RN, estados.RN)
+    gr.gerarCidades(PB, estados.PB)
+    gr.gerarCidades(PE, estados.PE)
+    gr.gerarCidades(AL, estados.AL)
+    gr.gerarCidades(SE, estados.SE)
+    gr.gerarCidades(BA, estados.BA)
+    gr.gerarCidades(MG, estados.MG)
+    gr.gerarCidades(ES, estados.ES)
+    gr.gerarCidades(RJ, estados.RJ)
+    gr.gerarCidades(SP, estados.SP)
+    gr.gerarCidades(PR, estados.PR)
+    gr.gerarCidades(SC, estados.SC)
+    gr.gerarCidades(RS, estados.RS)
+    gr.gerarCidades(MS, estados.MS)
+    gr.gerarCidades(MT, estados.MT)
+    gr.gerarCidades(GO, estados.GO)
+    gr.gerarCidades(DF, estados.DF)
+})

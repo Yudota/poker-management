@@ -1,4 +1,3 @@
-import ConnectionFactory from "./ConnectionFactory";
 
 import Carteira from "../models/Carteira";
 import Result from "../utils/Result";
@@ -18,20 +17,20 @@ export default class CarteiraDAO extends AbstractDAO {
   async criar(carteira: Carteira): Promise<Result> {
 
     try {
-      const result = await AbstractDAO.con.carteiras.create({
+      const result = await AbstractDAO.getPrismaClient().carteiras.create({
         data: {
           saldo: carteira.saldo,
         },
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
   async alterar(entidade: Carteira): Promise<any> {
     try {
-      const result = await AbstractDAO.con.carteiras.update({
+      const result = await AbstractDAO.getPrismaClient().carteiras.update({
         where: { id: Number(entidade.id) },
         data: {
           saldo: entidade.saldo
@@ -39,40 +38,40 @@ export default class CarteiraDAO extends AbstractDAO {
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
   async excluir(id: number): Promise<any> {
     try {
-      const result = await AbstractDAO.con.carteiras.delete({
+      const result = await AbstractDAO.getPrismaClient().carteiras.delete({
         where: { id },
 
       })
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
+      console.log('ERRO::', error)
       return this.result
     }
   }
-  async consultar(entidade?: Partial<Carteira> | undefined): Promise<any> {
+  async consultar(entidade?: Carteira | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await AbstractDAO.con.carteiras.findFirst({
+        const result = await AbstractDAO.getPrismaClient().carteiras.findFirst({
           where: { id: Number(entidade.id) },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
     else {
       try {
-        const result = await AbstractDAO.con.carteiras.findMany()
+        const result = await AbstractDAO.getPrismaClient().carteiras.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }

@@ -1,5 +1,3 @@
-import ConnectionFactory from "./ConnectionFactory";
-
 import Estado from "../models/Estado";
 import Result from "../utils/Result";
 import AbstractDAO from "./AbstractDAO";
@@ -26,35 +24,35 @@ export default class EstadoDAO extends AbstractDAO {
   async consultar(entidade?: Estado | undefined): Promise<Result> {
     if (entidade) {
       try {
-        const result = await AbstractDAO.con.estados.findFirst({
+        const result = await AbstractDAO.getPrismaClient().estados.findFirst({
           where: { id: Number(entidade.id) },
         })
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
     else {
       try {
-        const result = await AbstractDAO.con.estados.findMany()
+        const result = await AbstractDAO.getPrismaClient().estados.findMany()
         return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
       } catch (error) {
-        console.log('deu merda:', error)
+        console.log('ERRO::', error)
         return this.result
       }
     }
   }
   async consultaPorUF(entidade: Estado): Promise<Result> {
     try {
-      const result = await AbstractDAO.con.estados.findFirst({
-        where: { uf: entidade.uf },
+
+      const result = await AbstractDAO.getPrismaClient().estados.findFirst({
+        where: { uf: 'SP' },
       })
-      console.log('result', result)
       return this.result = { mensagem: 'sucesso', data: result } as unknown as Result
     } catch (error) {
-      console.log('deu merda:', error)
-      return this.result
+      console.log('ERRO::', error)
+      return this.result = { mensagem: 'falha', erro: 1, data: error } as unknown as Result
     }
 
   }
