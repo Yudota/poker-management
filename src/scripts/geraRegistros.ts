@@ -302,7 +302,6 @@ enum estados {
 import ConnectionFactory from "../DAO/ConnectionFactory";
 import { PrismaClient } from "@prisma/client";
 import { AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO } from "./cidades";
-import AbstractDAO from "../DAO/AbstractDAO";
 
 class GeraRegistro {
     con: PrismaClient;
@@ -318,7 +317,7 @@ class GeraRegistro {
         try {
             for (const estado of arr) {
 
-                await this.getPrismaClient().estados.create({
+                await this.con.estados.create({
                     data: {
                         descricao: estado.nome,
                         uf: estado.sigla
@@ -335,7 +334,7 @@ class GeraRegistro {
         try {
             for (const estado of arr) {
 
-                await this.getPrismaClient().cidades.create({
+                await this.con.cidades.create({
                     data: {
                         nomeCidade: estado.nome,
                         fk_estado: idEstado,
